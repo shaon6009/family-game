@@ -1,320 +1,777 @@
+cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>বাংলা কার্ড গেম</title>
+  <title>প্যাঁচফোড়ন (Patch Fooron) 🎭</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0b0f19;
+      --surface: #151f32;
+      --surface2: #1e2d4a;
+      --border: rgba(255,255,255,0.08);
+      --gold: #fbbf24;
+      --gold-dim: rgba(251,191,36,0.1);
+      --green: #10b981;
+      --blue: #3b82f6;
+      --purple: #8b5cf6;
+      --red: #ef4444;
+      --text: #f8fafc;
+      --text-muted: #64748b;
+      --text-soft: #cbd5e1;
     }
 
     body {
-      background: linear-gradient(135deg, #1f2937, #111827);
-      color: white;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Hind Siliguri', sans-serif;
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+      overflow-x: hidden;
     }
 
-    .container {
-      width: 100%;
-      max-width: 800px;
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 0%, rgba(139,92,246,0.15) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 80% 80%, rgba(251,191,36,0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .header { text-align: center; }
+    .header h1 { font-size: 2.4rem; color: var(--gold); font-weight: 700; }
+    .header p { color: var(--text-soft); font-size: 0.9rem; margin-top: 2px; }
+
+    /* SETUP SCREEN */
+    .setup-screen {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .setup-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--gold);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-soft);
+    }
+
+    .form-group input, .form-group select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      color: white;
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: var(--purple);
+    }
+
+    /* GAME PLAY SCREEN */
+    .game-screen {
+      display: none;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* ROUND TRACKER */
+    .round-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
       text-align: center;
     }
 
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      color: #facc15;
+    .round-status {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--purple);
+      margin-bottom: 6px;
     }
 
-    p {
-      color: #d1d5db;
-      margin-bottom: 20px;
+    .round-instruction {
+      font-size: 0.85rem;
+      color: var(--gold);
+      background: rgba(0,0,0,0.2);
+      padding: 8px;
+      border-radius: 8px;
+      border-left: 3px solid var(--purple);
     }
 
-    .card {
+    /* SCOREBOARD */
+    .scoreboard {
+      display: flex;
+      gap: 12px;
+    }
+
+    .team-box {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    .team-box.active-turn {
+      border-color: var(--gold);
+      background: var(--gold-dim);
+      transform: scale(1.02);
+    }
+
+    .turn-tag {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: #000;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .team-name {
+      background: transparent;
+      border: none;
+      border-bottom: 1px dashed rgba(255,255,255,0.2);
+      color: var(--text-soft);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-align: center;
+      width: 80%;
+      outline: none;
+    }
+
+    .team-score { font-size: 2.2rem; font-weight: 700; margin: 4px 0; }
+
+    .score-adjusters {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .adj-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .adj-plus { background: var(--green); color: white; }
+    .adj-minus { background: var(--red); color: white; }
+
+    /* CARD STAGE */
+    .card-box {
       background: white;
       color: #111827;
       border-radius: 24px;
-      padding: 40px 20px;
-      min-height: 320px;
+      padding: 2rem 1.5rem;
+      position: relative;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #6b7280;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .card-cat {
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 2px 10px;
+      border-radius: 999px;
+    }
+
+    .word-block {
+      text-align: center;
+      padding: 12px;
+      border-radius: 14px;
+      transition: background 0.2s;
+    }
+
+    .label-a { font-size: 0.7rem; font-weight: 700; color: var(--green); letter-spacing: 1px; }
+    .label-b { font-size: 0.7rem; font-weight: 700; color: var(--purple); letter-spacing: 1px; }
+
+    .val-a { font-size: 1.6rem; font-weight: 700; color: #111827; }
+    .val-b { font-size: 1.3rem; font-weight: 600; color: #374151; }
+
+    .divider {
+      border: none;
+      border-top: 2px dashed #e5e7eb;
+      margin: 14px 0;
+    }
+
+    /* TIMER */
+    .timer-section {
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
+      gap: 6px;
+    }
+    .timer-text { font-size: 2.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .timer-track { width: 100%; height: 6px; background: var(--surface); border-radius: 999px; overflow: hidden; }
+    .timer-bar { width: 100%; height: 100%; background: var(--green); transition: width 1s linear; }
+
+    /* CONTROLS */
+    .grid-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
 
-    .category {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background: #111827;
-      color: white;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-    }
-
-    .word {
-      font-size: 2rem;
-      font-weight: bold;
-      margin: 20px 0;
-      color: #111827;
-    }
-
-    .hidden {
-      filter: blur(12px);
-      user-select: none;
-    }
-
-    .controls {
-      margin-top: 25px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-    }
-
-    button {
-      padding: 12px 22px;
+    .btn {
+      padding: 12px;
       border: none;
       border-radius: 12px;
-      font-size: 1rem;
-      font-weight: bold;
+      font-size: 0.9rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: 0.2s ease;
+      font-family: inherit;
+      transition: all 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
+    .btn:active { transform: scale(0.97); }
 
-    button:hover {
-      transform: translateY(-2px);
-    }
+    .btn-a { background: var(--green); color: white; }
+    .btn-b { background: var(--purple); color: white; }
+    .btn-skip { background: var(--surface2); color: var(--text-soft); }
+    .btn-foul { background: rgba(239, 68, 68, 0.2); color: var(--red); border: 1px solid rgba(239,68,68,0.4); }
+    .btn-start { background: var(--blue); color: white; grid-column: span 2; font-size: 1rem; }
+    .btn-submit { background: var(--purple); color: white; font-size: 1rem; font-weight: 700; margin-top: 10px;}
 
-    .next-btn {
-      background: #22c55e;
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
       color: white;
+      padding: 8px 20px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 999;
     }
-
-    .reveal-btn {
-      background: #3b82f6;
-      color: white;
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    
+    .confetti {
+      position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: hidden;
     }
+    @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
-    .shuffle-btn {
-      background: #f59e0b;
-      color: white;
-    }
-
-    .stats {
-      margin-top: 20px;
-      color: #d1d5db;
-      font-size: 15px;
-    }
-
-    @media (max-width: 600px) {
-      .word {
-        font-size: 1.5rem;
-      }
-
-      h1 {
-        font-size: 2rem;
-      }
-
-      .card {
-        padding: 30px 15px;
-      }
+    .stats-bar {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🎭 বাংলা কার্ড গেম</h1>
-    <p>র‍্যান্ডম কার্ড দেখুন,  রিভিল করুন </p>
 
-    <div class="card">
-      <div class="category" id="category">CATEGORY</div>
-      <div class="word" id="wordA">লোড হচ্ছে...</div>
-      <div class="word hidden" id="wordB">????</div>
+  <div class="confetti" id="confetti"></div>
+  <div class="toast" id="toast"></div>
+
+  <div class="wrap">
+    <div class="header">
+      <h1>🌶️ প্যাঁচফোড়ন</h1>
+      <p>শব্দ জটলার আলটিমেট পার্টি গেম</p>
     </div>
 
-    <div class="controls">
-      <button class="reveal-btn" onclick="revealWord()">👀 Reveal</button>
-      <button class="next-btn" onclick="nextCard()">🎲 Next Card</button>
-      <button class="shuffle-btn" onclick="shuffleCards()">🔀 Shuffle</button>
+    <div class="setup-screen" id="setupScreen">
+      <div class="setup-title">⚙️ গেম সেটিংস সেট করুন</div>
+      
+      <div class="form-group">
+        <label>🔄 মোট রাউন্ড সংখ্যা:</label>
+        <select id="setupRounds">
+          <option value="1">১ রাউন্ড (ঝটপট খেলা)</option>
+          <option value="3" selected>৩ রাউন্ড (স্ট্যান্ডার্ড ম্যাচ)</option>
+          <option value="5">৫ রাউন্ড (মেগা ফাইট)</option>
+          <option value="7">৭ রাউন্ড (লং টাস্ক)</option>
+          <option value="9">৯ রাউন্ড (ম্যারাথন চ্যালেঞ্জ)</option>
+          <option value="11">১১ রাউন্ড (আলটিমেট গ্র্যান্ড ফিনালে)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>⏱️ প্রতি টার্নের সময় (সেকেন্ড):</label>
+        <input type="number" id="setupTime" value="45" min="10" max="180">
+      </div>
+
+      <button class="btn btn-submit" onclick="startGameEngine()">🚀 গেম শুরু করো</button>
     </div>
 
-    <div class="stats">
-      মোট কার্ড: <span id="totalCards">120</span> |
-      বর্তমান কার্ড ID: <span id="currentId">1</span>
+    <div class="game-screen" id="gameScreen">
+      <div class="round-container">
+        <div class="round-status" id="roundStatus">রাউন্ড ১ / ৩</div>
+        <div class="round-instruction" id="roundRule">
+          🗣️ <b>মুক্ত ক্লু:</b> মুখে কথা, অ্যাক্টিং সব চলবে। কিন্তু মূল শব্দ বা তার অংশ মুখে বলা নিষিদ্ধ!
+        </div>
+      </div>
+
+      <div class="scoreboard">
+        <div class="team-box active-turn" id="boxT1">
+          <div class="turn-tag" id="turnTag">চলতি টার্ন</div>
+          <input type="text" class="team-name" id="nameT1" value="টিম আম">
+          <div class="team-score" id="scoreT1">0</div>
+          <div class="score-adjusters">
+            <button class="adj-btn adj-plus" onclick="manualScore(1,1)">+</button>
+            <button class="adj-btn adj-minus" onclick="manualScore(1,-1)">-</button>
+          </div>
+        </div>
+        <div class="team-box" id="boxT2">
+          <input type="text" class="team-name" id="nameT2" value="টিম জাম">
+          <div class="team-score" id="scoreT2">0</div>
+          <div class="score-adjusters">
+            <button class="adj-btn adj-plus" onclick="manualScore(2,1)">+</button>
+            <button class="adj-btn adj-minus" onclick="manualScore(2,-1)">-</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-box">
+        <div class="card-header">
+          <span id="cardId">#001</span>
+          <span class="card-cat" id="cardCat">ক্যাটাগরি</span>
+        </div>
+        <div class="word-block" id="blockA">
+          <div class="label-a">WORD A (নরমাল পয়েন্ট)</div>
+          <div class="val-a" id="wordA">লোড হচ্ছে...</div>
+        </div>
+        <hr class="divider">
+        <div class="word-block" id="blockB">
+          <div class="label-b">WORD B (বোনাস চ্যালেঞ্জ)</div>
+          <div class="val-b" id="wordB">লোড হচ্ছে...</div>
+        </div>
+      </div>
+
+      <div class="timer-section">
+        <div class="timer-text" id="timerClock">45</div>
+        <div class="timer-track"><div class="timer-bar" id="timerBar"></div></div>
+      </div>
+
+      <div class="grid-controls">
+        <button class="btn btn-start" id="btnStart" onclick="startTurn()">⏳ টার্ন শুরু করো</button>
+        <button class="btn btn-a" onclick="scorePoint(1)">✅ Word A মিলেছে (+1)</button>
+        <button class="btn btn-b" onclick="scorePoint(2)">🔥 Word B বোনাস (+2)</button>
+        <button class="btn btn-skip" onclick="skipCard()">⏭️ স্কিপ / পাস</button>
+        <button class="btn btn-foul" onclick="foulPenalty()">🚨 বিপক্ষ দল: ফাউল! (-1)</button>
+      </div>
+
+      <div class="stats-bar" id="statsBar">কার্ড বাকি: ১২০/১২০</div>
     </div>
   </div>
 
   <script>
-    const cards = [
-      { id: 1, a: "ফুচকা (Fuchka)", b: "টক জল (Tok Jol)", category: "Pop Culture" },
-      { id: 2, a: "রিকশা মামা (Rickshaw Mama)", b: "জ্যাম (Traffic Jam)", category: "Pop Culture" },
-      { id: 3, a: "লুঙ্গি (Lungi)", b: "SRK / Lungi Dance", category: "Pop Culture" },
-      { id: 4, a: "শোলে (Sholay)", b: "গব্বর সিং", category: "Pop Culture" },
-      { id: 5, a: "কাচ্চি বিরিয়ানি", b: "বোরহানি", category: "Pop Culture" },
-      { id: 6, a: "বৈশাখী মেলা", b: "নাগরদোলা", category: "Pop Culture" },
-      { id: 7, a: "টাইটানিক", b: "জ্যাক & রোজ", category: "Pop Culture" },
-      { id: 8, a: "থ্রি ইডিয়টস", b: "অল ইজ ওয়েল", category: "Pop Culture" },
-      { id: 9, a: "লোডশেডিং", b: "হাতপাখা", category: "Pop Culture" },
-      { id: 10, a: "হ্যারি পটার", b: "জাদুর কাঠি", category: "Pop Culture" },
-      { id: 11, a: "ঈদের সেলামি", b: "নতুন জামা", category: "Pop Culture" },
-      { id: 12, a: "বৃষ্টির দিন", b: "খিচুড়ি", category: "Pop Culture" },
-      { id: 13, a: "মিস্টার বিন", b: "টেডি", category: "Pop Culture" },
-      { id: 14, a: "গায়ে হলুদ", b: "ডালা", category: "Pop Culture" },
-      { id: 15, a: "অমিতাভ বচ্চন", b: "কুলি", category: "Pop Culture" },
-      { id: 16, a: "ডন", b: "১১ মুল্লুকের পুলিশ", category: "Pop Culture" },
-      { id: 17, a: "সিনেমা হল", b: "সিটি মারা", category: "Pop Culture" },
-      { id: 18, a: "স্পাইডারম্যান", b: "মাকড়সার জাল", category: "Pop Culture" },
-      { id: 19, a: "ভুতুড়ে গল্প", b: "মেছো ভূত", category: "Pop Culture" },
-      { id: 20, a: "শীতের সকাল", b: "ভাপা পিঠা", category: "Pop Culture" },
-      { id: 21, a: "দিলওয়ালে দুলহানিয়া", b: "চলন্ত ট্রেন", category: "Pop Culture" },
-      { id: 22, a: "বাজিগর", b: "হার কর জিতনে ওয়ালা", category: "Pop Culture" },
-      { id: 23, a: "কুছ কুছ হোতা হ্যায়", b: "ফ্রেন্ডশিপ ব্যান্ড", category: "Pop Culture" },
-      { id: 24, a: "জেমস বন্ড", b: "০০৭", category: "Pop Culture" },
-      { id: 25, a: "মাটির ব্যাংক", b: "খুচরা পয়সা", category: "Pop Culture" },
-      { id: 26, a: "অ্যাভেঞ্জার্স", b: "থানোসের তুড়ি", category: "Pop Culture" },
-      { id: 27, a: "দেবদাস", b: "পারো", category: "Pop Culture" },
-      { id: 28, a: "বাহুবলী", b: "কাটাপ্পা", category: "Pop Culture" },
-      { id: 29, a: "ক্রিশ", b: "সুপারহিরো মাস্ক", category: "Pop Culture" },
-      { id: 30, a: "টার্মিনেটর", b: "আই উইল বি ব্যাক", category: "Pop Culture" },
-      { id: 31, a: "জোকার", b: "ক্রাইম প্রিন্স", category: "Pop Culture" },
-      { id: 32, a: "চশমা", b: "হৃতিক রোশন", category: "Pop Culture" },
-      { id: 33, a: "পাইরেটস অফ ক্যারিবিয়ান", b: "জ্যাক স্প্যারো", category: "Pop Culture" },
-      { id: 34, a: "হোম অ্যালোন", b: "চোর তাড়ানো", category: "Pop Culture" },
-      { id: 35, a: "টারজান", b: "জঙ্গলের রাজা", category: "Pop Culture" },
-      { id: 36, a: "জুরাসিক পার্ক", b: "ডাইনোসর", category: "Pop Culture" },
-      { id: 37, a: "কাল হো না হো", b: "লাল ডায়রি", category: "Pop Culture" },
-      { id: 38, a: "গজনি", b: "শর্ট-টার্ম মেমোরি লস", category: "Pop Culture" },
-      { id: 39, a: "সলমন খান", b: "বডি বিল্ডার", category: "Pop Culture" },
-      { id: 40, a: "চাটগাঁইয়া বেল্ট", b: "মেজবান", category: "Pop Culture" },
-      { id: 41, a: "প্যারা", b: "চিল", category: "Desi Chaos" },
-      { id: 42, a: "ভাব নেওয়া", b: "মোটিভেশন", category: "Desi Chaos" },
-      { id: 43, a: "মামা", b: "ব্রো", category: "Desi Chaos" },
-      { id: 44, a: "আবাল", b: "আঁতেল", category: "Desi Chaos" },
-      { id: 45, a: "পাম দেওয়া", b: "তিল মারা", category: "Desi Chaos" },
-      { id: 46, a: "কাঠি করা", b: "পরনিন্দা", category: "Desi Chaos" },
-      { id: 47, a: "ক্রাশ", b: "ছ্যাঁকা", category: "Desi Chaos" },
-      { id: 48, a: "ভাবি", b: "ঘটক", category: "Desi Chaos" },
-      { id: 49, a: "খাওয়া দাওয়া", b: "বিল দেওয়া", category: "Desi Chaos" },
-      { id: 50, a: "লেট লতিফ", b: "জ্যামের অজুহাত", category: "Desi Chaos" },
-      { id: 51, a: "পকেটমার", b: "চোর চোর", category: "Desi Chaos" },
-      { id: 52, a: "ভুড়ি", b: "ডায়েট", category: "Desi Chaos" },
-      { id: 53, a: "ব্যাকবেঞ্চার", b: "ফার্স্ট বয়", category: "Desi Chaos" },
-      { id: 54, a: "কানপড়া", b: "চুগুলখোর", category: "Desi Chaos" },
-      { id: 55, a: "ড্যাম কেয়ার", b: "ড্যামেজ", category: "Desi Chaos" },
-      { id: 56, a: "চাপা মারা", b: "পপকর্ন", category: "Desi Chaos" },
-      { id: 57, a: "ফাঁকিবাজ", b: "এসাইনমেন্ট", category: "Desi Chaos" },
-      { id: 58, a: "ঘ্যামা", b: "ফালতু", category: "Desi Chaos" },
-      { id: 59, a: "সেলফি", b: "ফিল্টার", category: "Desi Chaos" },
-      { id: 60, a: "পিরিত", b: "ছদ্মবেশ", category: "Desi Chaos" },
-      { id: 61, a: "মশারী", b: "কয়েল", category: "Desi Chaos" },
-      { id: 62, a: "ঝাড়ু", b: "ঘর মোছা", category: "Desi Chaos" },
-      { id: 63, a: "বাজারের ব্যাগ", b: "দরদাম", category: "Desi Chaos" },
-      { id: 64, a: "রিমোট কন্ট্রোল", b: "চ্যানেল ফাইট", category: "Desi Chaos" },
-      { id: 65, a: "প্রেশার কুকার", b: "সিটি দেওয়া", category: "Desi Chaos" },
-      { id: 66, a: "ডাইনিং টেবিল", b: "তরকারি", category: "Desi Chaos" },
-      { id: 67, a: "আলমারি", b: "চাবি হারানো", category: "Desi Chaos" },
-      { id: 68, a: "বারান্দা", b: "কাপড় শুকানো", category: "Desi Chaos" },
-      { id: 69, a: "দেয়াল ঘড়ি", b: "ব্যাটারি শেষ", category: "Desi Chaos" },
-      { id: 70, a: "বাথরুম সিঙ্গার", b: "সাবান", category: "Desi Chaos" },
-      { id: 71, a: "অতিথি", b: "মিষ্টির প্যাকেট", category: "Desi Chaos" },
-      { id: 72, a: "সকালের অ্যালার্ম", b: "স্নুজ বাটন", category: "Desi Chaos" },
-      { id: 73, a: "গরম জল", b: "ফ্লাস্ক", category: "Desi Chaos" },
-      { id: 74, a: "আয়না", b: "চুল আঁচড়ানো", category: "Desi Chaos" },
-      { id: 75, a: "ফ্রিজ", b: "বাসি তরকারি", category: "Desi Chaos" },
-      { id: 76, a: "স্ক্রিন টাইম", b: "চার্জার", category: "Desi Chaos" },
-      { id: 77, a: "পাপোশ", b: "কাদা", category: "Desi Chaos" },
-      { id: 78, a: "সুঁই সুতা", b: "বোতাম", category: "Desi Chaos" },
-      { id: 79, a: "মানিব্যাগ", b: "ফতুর", category: "Desi Chaos" },
-      { id: 80, a: "ঘর সাজানো", b: "ঝুল ঝাড়া", category: "Desi Chaos" },
-      { id: 81, a: "টং দোকান", b: "মামা এক কাপ", category: "Nostalgia" },
-      { id: 82, a: "লুডু", b: "ছক্কা", category: "Nostalgia" },
-      { id: 83, a: "কেরাম বোর্ড", b: "স্ট্রাইকার", category: "Nostalgia" },
-      { id: 84, a: "ফ্লাইং কিক", b: "সাউথ ইন্ডিয়ান মুভি", category: "Nostalgia" },
-      { id: 85, a: "কাগজের নৌকা", b: "বর্ষার জল", category: "Nostalgia" },
-      { id: 86, a: "ঘুড়ি ওড়ানো", b: "নাটাই", category: "Nostalgia" },
-      { id: 87, a: "লাটিম", b: "সুতা", category: "Nostalgia" },
-      { id: 88, a: "হাডুডু", b: "দম আটকানো", category: "Nostalgia" },
-      { id: 89, a: "কানাছাফি", b: "লুকোচুরি", category: "Nostalgia" },
-      { id: 90, a: "ক্রিকেট ব্যাট", b: "টেপ টেনিস বল", category: "Nostalgia" },
-      { id: 91, a: "স্ট্যাম্প", b: "ইট", category: "Nostalgia" },
-      { id: 92, a: "ছাদ কৃষি", b: "লেবু গাছ", category: "Nostalgia" },
-      { id: 93, a: "পরীক্ষার হল", b: "দেখা দেখি", category: "Nostalgia" },
-      { id: 94, a: "পড়া মুখস্থ", b: "ঠোঁটস্থ", category: "Nostalgia" },
-      { id: 95, a: "টিফিন বক্স", b: "ডিম পাউরুটি", category: "Nostalgia" },
-      { id: 96, a: "স্কুলের ঘন্টা", b: "ছুটি ছুটি", category: "Nostalgia" },
-      { id: 97, a: "প্রাইভেট টিউটর", b: "হোমওয়ার্ক", category: "Nostalgia" },
-      { id: 98, a: "রিপোর্ট কার্ড", b: "বাবার সই", category: "Nostalgia" },
-      { id: 99, a: "পেন্সিল কম্পাস", b: "জ্যামিতি বক্স", category: "Nostalgia" },
-      { id: 100, a: "রবার", b: "খাতা ছেঁড়া", category: "Nostalgia" },
-      { id: 101, a: "ঝালমুড়ি", b: "ঠোঙা", category: "Nostalgia" },
-      { id: 102, a: "আচারের বয়াম", b: "রোদে দেওয়া", category: "Nostalgia" },
-      { id: 103, a: "হকার", b: "পুরানো পেপার বিক্রি", category: "Nostalgia" },
-      { id: 104, a: "আইসক্রিম ওয়ালা", b: "ভোঁপো বাঁশি", category: "Nostalgia" },
-      { id: 105, a: "কটন ক্যান্ডি", b: "হাওয়াই মিঠাই", category: "Nostalgia" },
-      { id: 106, a: "টক আম", b: "কাশুন্দি", category: "Nostalgia" },
-      { id: 107, a: "ডাব বিক্রেতা", b: "দা", category: "Nostalgia" },
-      { id: 108, a: "ইলিশ মাছ", b: "সরষে বাটা", category: "Nostalgia" },
-      { id: 109, a: "শুটকি মাছ", b: "ঝাল চাটনি", category: "Nostalgia" },
-      { id: 110, a: "পিঠা উৎসব", b: "চিতই পিঠা", category: "Nostalgia" },
-      { id: 111, a: "সরিষার তেল", b: "গায়ে মাখা", category: "Nostalgia" },
-      { id: 112, a: "হারিকেন", b: "কেরোসিন তেল", category: "Nostalgia" },
-      { id: 113, a: "ক্যাসেট ফিতা", b: "কলম দিয়ে ঘোরানো", category: "Nostalgia" },
-      { id: 114, a: "ফটো অ্যালবাম", b: "রঙিন নেগেটিভ", category: "Nostalgia" },
-      { id: 115, a: "চিঠি", b: "ডাকপিয়ন", category: "Nostalgia" },
-      { id: 116, a: "টেলিভিশন অ্যান্টেনা", b: "ঝিরঝির করা", category: "Nostalgia" },
-      { id: 117, a: "রেডিও", b: "খবরের হেডলাইন", category: "Nostalgia" },
-      { id: 118, a: "গ্রামের বাড়ি", b: "দাদা-দাদী", category: "Nostalgia" },
-      { id: 119, a: "পুকুর ঘাট", b: "ঝাঁপ দেওয়া", category: "Nostalgia" },
-      { id: 120, a: "শেষ পাতা", b: "সমাপ্ত", category: "Nostalgia" }
+    const DATA = [
+      { id: 1, a: "ফুচকা (Fuchka)", b: "টক জল (Tok Jol)" },
+      { id: 2, a: "রিকশা মামা (Rickshaw Mama)", b: "জ্যাম (Traffic Jam)" },
+      { id: 3, a: "লুঙ্গি (Lungi)", b: "शाहरुख खान (SRK / Lungi Dance)" },
+      { id: 4, a: "শোলে (Sholay)", b: "গব্বর সিং (Gabbar Singh)" },
+      { id: 5, a: "কাচ্চি বিরিয়ানি (Kacchi)", b: "বোরহানি (Borhani)" },
+      { id: 6, a: "বৈশাখী মেলা (Boishakhi Mela)", b: "নাগরদোলা (Ferris Wheel)" },
+      { id: 7, a: "টাইটানিক (Titanic)", b: "জ্যাক আর روز (Jack & Rose)" },
+      { id: 8, a: "ث্রি ইডিয়টস (3 Idiots)", b: "অল ইজ ওয়েল (All Is Well)" },
+      { id: 9, a: "লোডশেডিং (Loadshedding)", b: "হাতপাখা (Hand Fan)" },
+      { id: 10, a: "হ্যারি পটার (Harry Potter)", b: "জাদুর কাঠি (Magic Wand)" },
+      { id: 11, a: "ঈদের সেলামি (Eeder Selami)", b: "নতুন জামা (New Clothes)" },
+      { id: 12, a: "বৃষ্টির দিন (Rainy Day)", b: "খিচুড়ি (Khichuri)" },
+      { id: 13, a: "মিস্টার বিন (Mr. Bean)", b: "টেডি (Teddy)" },
+      { id: 14, a: "গায়ে হলুদ (Gaye Holud)", b: "ডালা (Wedding Tray)" },
+      { id: 15, a: "অমিতাভ বচ্চন (Amitabh)", b: "কুলি (Coolie)" },
+      { id: 16, a: "ডন (Don)", b: "১১ মুল্লুকের পুলিশ" },
+      { id: 17, a: "সিনেমা হল (Cinema Hall)", b: "সিটি মারা (Whistling)" },
+      { id: 18, a: "স্পাইডারম্যান (Spiderman)", b: "مাকড়সার জাল (Cobweb)" },
+      { id: 19, a: "ভুতুড়ে গল্প (Ghost Story)", b: "মেছো ভূত" },
+      { id: 20, a: "শীতের সকাল (Winter)", b: "ভাপা পিঠা (Bhapa Pitha)" },
+      { id: 21, a: "দিলওয়ালে দুলহানিয়া (DDLJ)", b: "চলন্ত ট্রেন (Train Scene)" },
+      { id: 22, a: "बाजीगर (Baazigar)", b: "হার কর জিতনে ওয়ালা" },
+      { id: 23, a: "কুছ কুছ হোতা হ্যায়", b: "ফ্রেন্ডশিপ ব্যান্ড" },
+      { id: 24, a: "জেমস বন্ড (James Bond)", b: "০০৭ (007)" },
+      { id: 25, a: "মাটির ব্যাংক (Clay Bank)", b: "খুচরা পয়সা (Coins)" },
+      { id: 26, a: "অ্যাভেঞ্জার্স (Avengers)", b: "থানোসের তুড়ি (Thanos Snap)" },
+      { id: 27, a: "দেবদাস (Devdas)", b: "পারো (Paro)" },
+      { id: 28, a: "বাহুবলী (Baahubali)", b: "কাটাপ্পা (Katappa)" },
+      { id: 29, a: "ক্রিশ (Krrish)", b: "সুপারহিরো মাস্ক" },
+      { id: 30, a: "টার্মিনেটর (Terminator)", b: "আই উইল বি ব্যাক" },
+      { id: 31, a: "জোকার (Joker)", b: "ক্রাইম প্রিন্স (Gotham)" },
+      { id: 32, a: "চশমা (Glasses)", b: "হৃতিক রোশন (Koi Mil Gaya)" },
+      { id: 33, a: "পাইরেটস অফ ক্যারিবিয়ান", b: "জ্যাক স্প্যারো" },
+      { id: 34, a: "হোম অ্যালোন (Home Alone)", b: "চোর তাড়ানো (Traps)" },
+      { id: 35, a: "টারজান (Tarzan)", b: "জঙ্গলের রাজা (Jungle King)" },
+      { id: 36, a: "জুরাসিক পার্ক (Jurassic)", b: "ডাইনোসর (Dinosaur)" },
+      { id: 37, a: "কাল হো না হো (KHNH)", b: "লাল ডায়রি (Red Diary)" },
+      { id: 38, a: "গজনি (Ghajini)", b: "শর্ট-টার্ম মেমোরি লস" },
+      { id: 39, a: "সলমন খান (Salman)", b: "বডি বিল্ডার (Shirtless)" },
+      { id: 40, a: "চাটগাঁইয়া বেল্ট", b: "মেজবান (Mezban)" },
+      { id: 41, a: "প্যারা (Para/Stress)", b: "চিল (Chill)" },
+      { id: 42, a: "ভাব নেওয়া (Showing Off)", b: "মোтивнойেশন (Motivation)" },
+      { id: 43, a: "মামা (Mama/Friend)", b: "ব্রো (Bro)" },
+      { id: 44, a: "আবাল (Abal)", b: "আঁতেল (Intellectual)" },
+      { id: 45, a: "পাম দেওয়া (Flattery)", b: "তিল মারা (Buttering Up)" },
+      { id: 46, a: "কাঠি করা (Instigating)", b: "পরনিন্দা (Gossip)" },
+      { id: 47, a: "ক্রাশ (Crush)", b: "ছ্যাঁকা (Heartbreak)" },
+      { id: 48, a: "ভাবি (Bhabhi)", b: "ঘটক (Matchmaker)" },
+      { id: 49, a: "খাওয়া দাওয়া (Feast)", b: "বিল দেওয়া (Paying Bill)" },
+      { id: 50, a: "লেট লতিফ (Late Lateef)", b: "জ্যামের অজুহাত" },
+      { id: 51, a: "পকেটমার (Pickpocket)", b: "চোর চোর (Thief Shout)" },
+      { id: 52, a: "ভুড়ি (Belly Fat)", b: "ডায়েট (Diet)" },
+      { id: 53, a: "ব্যাকবেঞ্চার (Backbencher)", b: "ফার্স্ট বয় (First Boy)" },
+      { id: 54, a: "কানপড়া (Rumors)", b: "চুগুলখোর (Snitch)" },
+      { id: 55, a: "ড্যাম কেয়ার (Damn Care)", b: "ড্যামেজ (Damage)" },
+      { id: 56, a: "চাপা মারা (Boasting)", b: "পপকর্ন (Popcorn)" },
+      { id: 57, a: "ফাঁকিবাজ (Slacker)", b: "এসাইনমেন্ট (Assignment)" },
+      { id: 58, a: "ঘ্যামা (Cool/Awesome)", b: "ফালতু (Useless)" },
+      { id: 59, a: "সেলফি (Selfie)", b: "ফিল্টার (Filter)" },
+      { id: 60, a: "পিরিত (Romance)", b: "ছদ্মবেশ (Disguise)" },
+      { id: 61, a: "মশারী (Mosquito Net)", b: "কয়েল (Coil)" },
+      { id: 62, a: "ঝাড়ু (Broom)", b: "ঘর মোছা (Mopping)" },
+      { id: 63, a: "বাজারের ব্যাগ (Bazaar Bag)", b: "দরদাম (Bargaining)" },
+      { id: 64, a: "রিমোট কন্ট্রোল (Remote)", b: "ঝগড়া (Channel Fight)" },
+      { id: 65, a: "প্রেশার কুকার", b: "সিটি দেওয়া (Whistle)" },
+      { id: 66, a: "ডাইনিং টেবিল", b: "তরকারি (Curry)" },
+      { id: 67, a: "আলমারি (Almari)", b: "চাবি হারানো (Lost Key)" },
+      { id: 68, a: "বারান্দা (Veranda)", b: "কাপড় শুকানো" },
+      { id: 69, a: "দেয়াল ঘড়ি (Wall Clock)", b: "ব্যাটারি শেষ" },
+      { id: 70, a: "বাথরুম সিঙ্গার", b: "সাবান (Soap)" },
+      { id: 71, a: "অতিথি (Guest)", b: "মিষ্টির প্যাকেট" },
+      { id: 72, a: "সকালের অ্যালার্ম", b: "স্নুজ বাটন (Snooze)" },
+      { id: 73, a: "গরম জল (Hot Water)", b: "ফ্লাস্ক (Flask)" },
+      { id: 74, a: "আয়না (Mirror)", b: "চুল আঁচড়ানো (Combing)" },
+      { id: 75, a: "ফ্রিজ (Refrigerator)", b: "বাসি তরকারি (Leftovers)" },
+      { id: 76, a: "스크린 타임 (Screen Time)", b: "চার্জার (Charger)" },
+      { id: 77, a: "পাপোশ (Doormat)", b: "কাদা (Mud)" },
+      { id: 78, a: "সুঁই সুতা (Needle/Thread)", b: "বোতাম (Button)" },
+      { id: 79, a: "মানিব্যাগ (Wallet)", b: "ফতুর (Broke)" },
+      { id: 80, a: "ঘর সাজানো", b: "ঝুল ঝাড়া (Cobweb)" },
+      { id: 81, a: "টং দোকান (Tong)", b: "মামা এক কাপ (Cha)" },
+      { id: 82, a: "লুডু (Ludo)", b: "ছক্কা (Sixer)" },
+      { id: 83, a: "কেরাম বোর্ড (Carrom)", b: "স্ট্রাইকার (Striker)" },
+      { id: 84, a: "ফ্লাইং কিক (Flying Kick)", b: "সাউথ ইন্ডিয়ান মুভি" },
+      { id: 85, a: "কাগজের নৌকা", b: "বর্ষার জল (Rainwater)" },
+      { id: 86, a: "ঘুড়ি ওড়ানো (Kite)", b: "নাটাই (Spool)" },
+      { id: 87, a: "লাটিম (Top)", b: "সুতা (String)" },
+      { id: 88, a: "হাডুডু (Hadudu)", b: "দম আটকানো (Breath Hold)" },
+      { id: 89, a: "কানাছাফি (Blindfold)", b: "লুকোচুরি (Hide & Seek)" },
+      { id: 90, a: "ক্রিকেট ব্যাট", b: "টেপ টেনিস বল" },
+      { id: 91, a: "স্ট্যাম্প (Stumps)", b: "ইট (Brick Stumps)" },
+      { id: 92, a: "ছাদ কৃষি (Roof Garden)", b: "লেবু গাছ (Lemon Tree)" },
+      { id: 93, a: "পরীক্ষার হল", b: "দেখা দেখি (Cheating)" },
+      { id: 94, a: "পড়া মুখস্থ", b: "ঠোঁটস্থ (Rote Learning)" },
+      { id: 95, a: "টিফিন বক্স", b: "ডিম পাউরুটি (Egg Bread)" },
+      { id: 96, a: "স্কুলের ঘন্টা (School Bell)", b: "ছুটি ছুটি (Dismissal)" },
+      { id: 97, a: "প্রাইভেট টিউটর", b: "হোমওয়ার্ক (Homework)" },
+      { id: 98, a: "রিপোর্ট কার্ড", b: "বাবার সই (Father Sign)" },
+      { id: 99, a: "পেন্সিল কম্পাস", b: "জ্যামিতি বক্স (Geometry)" },
+      { id: 100, a: "রবার (Eraser)", b: "খাতা ছেঁড়া (Torn Page)" },
+      { id: 101, a: "ঝালমুড়ি (Jhalmuri)", b: "ঠোঙা (Paper Cone)" },
+      { id: 102, a: "আচারের বয়াম", b: "রোদে দেওয়া (Sun Drying)" },
+      { id: 103, a: "হকার (Hawker)", b: "পুরানো পেপার বিক্রি" },
+      { id: 104, a: "আইসক্রিম ওয়ালা", b: "ভোঁপো বাঁশি (Horn)" },
+      { id: 105, a: "কটন ক্যান্ডি", b: "হাওয়াই মিঠাই" },
+      { id: 106, a: "টক আম (Sour Mango)", b: "কাশুন্দি (Kasundi)" },
+      { id: 107, a: "ডাব বিক্রেতা (Coconut)", b: "দা (Machete)" },
+      { id: 108, a: "ইলিশ মাছ (Hilsa)", b: "সরষে বাটা (Mustard)" },
+      { id: 109, a: "শুটকি মাছ (Shutki)", b: "ঝাল চাটনি (Spicy)" },
+      { id: 110, a: "পিঠা উৎসব", b: "চিতই পিঠা (Chitoi)" },
+      { id: 111, a: "সরিষার তেল (Mustard Oil)", b: "গায়ে মাখা (Massage)" },
+      { id: 112, a: "হারিকেন (Hurricane)", b: "কেরোসিন তেল" },
+      { id: 113, a: "ক্যাসেট ফিতা (Cassette)", b: "কলম দিয়ে ঘোরানো" },
+      { id: 114, a: "ফটো অ্যালবাম", b: "রঙিন নেগেティブ (Negative)" },
+      { id: 115, a: "চিঠি (Letter)", b: "ডাকপিয়ন (Postman)" },
+      { id: 116, a: "টেলিভিশন অ্যান্টেনা", b: "ঝিরঝির করা (Static Sign)" },
+      { id: 117, a: "রেডিও (Radio)", b: "খবরের হেডলাইন" },
+      { id: 118, a: "গ্রামের বাড়ি (Village)", b: "দাদা-দাদী (Grandparents)" },
+      { id: 119, a: "পুকুর ঘাট (Pond)", b: "ঝাঁপ দেওয়া (Diving)" },
+      { id: 120, a: "শেষ পাতা (Last Page)", b: "সমাপ্ত (The End)" }
     ];
 
-    let currentCard = 0;
+    const RULES = {
+      1: "🗣️ <b>মুক্ত ক্লু:</b> মুখে কথা, অ্যাক্টিং সব চলবে। কিন্তু মূল শব্দ বা তার অংশ মুখে বলা নিষিদ্ধ!",
+      2: "☝️ <b>এক শব্দের ক্লু:</b> পুরো টার্নে মুখে মাত্র ১টি শব্দ বলতে পারবেন। বাকি সব ইশারা ও সাউন্ড ইফেক্ট!",
+      3: "🤫 <b>বোবা অভিনয়:</b> মুখে কোনো কথা বা আওয়াজ করা সম্পূর্ণ নিষিদ্ধ। শুধু বডি ল্যাঙ্গুয়েজ!",
+      4: "🗣️ <b>মুক্ত ক্লু (বোনাস রাউন্ড):</b> দ্রুত মেলাও! ফুল স্পিড অ্যাকশন!",
+      5: "🤫 <b>বোবা অভিনয় (মেগা ফাইনাল):</b> চ্যাম্পিয়নশিপ নির্ধারণী শেষ রাউন্ড!",
+      6: "☝️ <b>এক শব্দের ক্লু (ট্যাকটিক্যাল):</b> মাথা খাটান, মাত্র ১টি শব্দে পুরো টিমকে জেতান!",
+      7: "🗣️ <b>মুক্ত ক্লু (টাইব্রেকার মোড):</b> উত্তেজনা তুঙ্গে, যেকোনো ইশারায় বা কথায় ক্লু দিন!",
+      8: "🤫 <b>বোবা অভিনয় (সুপার চ্যালেঞ্জ):</b> মুখে কোনো রা কাড়া যাবে না!",
+      9: "☝️ <b>এক শব্দের ক্লু (এলিট রাউন্ড):</b> শুধুই একটি পারফেক্ট শব্দ!",
+      10: "🗣️ <b>মুক্ত ক্লু (সেমি ফাইনাল):</b> যেকোনো উপায়ে টিমকে পয়েন্ট এনে দিন!",
+      11: "🤫 <b>বোবা অভিনয় (আলটিমেট গ্ল্যাডিয়েটর):</b> ইতিহাসের দীর্ঘতম ম্যাচের শেষ ও চূড়ান্ত বোবা লড়াই!"
+    };
 
-    const wordA = document.getElementById("wordA");
-    const wordB = document.getElementById("wordB");
-    const category = document.getElementById("category");
-    const currentId = document.getElementById("currentId");
+    let deck = [];
+    let currentIdx = 0;
+    let scores = [0, 0];
+    let activeTeam = 1;
+    let timer = null;
+    let secondsLeft = 45;
+    let maxSeconds = 45;
+    let currentRound = 1;
+    let maxRounds = 3;
+    let isPlaying = false;
+    let turnsInCurrentRound = 0;
 
-    function loadCard(index) {
-      const card = cards[index];
-      wordA.textContent = card.a;
-      wordB.textContent = card.b;
-      wordB.classList.add("hidden");
-      category.textContent = card.category;
-      currentId.textContent = card.id;
+    function getCategory(id) {
+      if (id <= 40) return "পপ কালচার ও মুভি";
+      if (id <= 80) return "দেশী লাইফ ও ক্যাওস";
+      return "নস্টালজিয়া ও স্মৃতি";
     }
 
-    function revealWord() {
-      wordB.classList.remove("hidden");
+    function startGameEngine() {
+      maxRounds = parseInt(document.getElementById('setupRounds').value);
+      maxSeconds = parseInt(document.getElementById('setupTime').value);
+      
+      if(isNaN(maxSeconds) || maxSeconds < 10) maxSeconds = 45;
+
+      document.getElementById('setupScreen').style.display = 'none';
+      document.getElementById('gameScreen').style.display = 'flex';
+
+      deck = shuffle([...DATA]);
+      currentIdx = 0;
+      scores = [0, 0];
+      activeTeam = 1;
+      currentRound = 1;
+      turnsInCurrentRound = 0;
+
+      updateRoundUI();
+      renderCard();
+      showToast("🎮 ১২০টি কাস্টম কার্ড সফলভাবে লোড হয়েছে!");
     }
 
-    function nextCard() {
-      currentCard = Math.floor(Math.random() * cards.length);
-      loadCard(currentCard);
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
     }
 
-    function shuffleCards() {
-      cards.sort(() => Math.random() - 0.5);
-      currentCard = 0;
-      loadCard(currentCard);
+    function updateRoundUI() {
+      document.getElementById('roundStatus').textContent = `রাউন্ড ${currentRound} / ${maxRounds}`;
+      document.getElementById('roundRule').innerHTML = RULES[currentRound] || RULES[1];
     }
 
-    loadCard(currentCard);
+    function renderCard() {
+      if(currentIdx >= deck.length) {
+        deck = shuffle([...DATA]);
+        currentIdx = 0;
+      }
+      const card = deck[currentIdx];
+      document.getElementById('cardId').textContent = '#' + String(card.id).padStart(3, '0');
+      document.getElementById('cardCat').textContent = getCategory(card.id);
+      document.getElementById('wordA').textContent = card.a;
+      document.getElementById('wordB').textContent = card.b;
+      
+      document.getElementById('statsBar').textContent = `কার্ড বাকি: ${deck.length - currentIdx}/${deck.length}`;
+    }
+
+    function startTurn() {
+      if(isPlaying) return;
+      isPlaying = true;
+      secondsLeft = maxSeconds;
+      document.getElementById('btnStart').disabled = true;
+      document.getElementById('btnStart').textContent = "💥 খেলা চলছে...";
+      
+      updateTimerUI();
+      
+      timer = setInterval(() => {
+        secondsLeft--;
+        updateTimerUI();
+        
+        if(secondsLeft <= 0) {
+          clearInterval(timer);
+          isPlaying = false;
+          document.getElementById('btnStart').disabled = false;
+          document.getElementById('btnStart').textContent = "⏳ টার্ন শুরু করো";
+          showToast("⏰ সময় শেষ!");
+          
+          handleTurnEnd();
+        }
+      }, 1000);
+    }
+
+    function updateTimerUI() {
+      const clock = document.getElementById('timerClock');
+      const bar = document.getElementById('timerBar');
+      clock.textContent = secondsLeft;
+      bar.style.width = (secondsLeft / maxSeconds) * 100 + '%';
+      
+      if(secondsLeft <= 5) {
+        clock.style.color = '#ef4444';
+        bar.style.background = '#ef4444';
+      } else {
+        clock.style.color = '#f8fafc';
+        bar.style.background = '#10b981';
+      }
+    }
+
+    function scorePoint(pts) {
+      if(!isPlaying) {
+        showToast("⚠️ আগে 'টার্ন শুরু করো' বাটন চেপে টাইমার চালু করুন!");
+        return;
+      }
+      
+      scores[activeTeam - 1] += pts;
+      document.getElementById(`scoreT${activeTeam}`).textContent = scores[activeTeam - 1];
+      
+      if(pts === 2) {
+        showToast("🔥 ডাবল ধামাকা! বোনাস +2 পয়েন্ট!");
+        fireConfetti();
+      } else {
+        showToast("👍 দারুণ! +1 পয়েন্ট।");
+      }
+      
+      currentIdx++;
+      renderCard();
+    }
+
+    function foulPenalty() {
+      const currentTeam = activeTeam;
+      scores[currentTeam - 1] = Math.max(0, scores[currentTeam - 1] - 1);
+      document.getElementById(`scoreT${currentTeam}`).textContent = scores[currentTeam - 1];
+      showToast("🚨 নিয়ম ভাঙার অপরাধে -1 পয়েন্ট পেনাল্টি!");
+      currentIdx++;
+      renderCard();
+    }
+
+    function skipCard() {
+      showToast("⏭️ কার্ড স্কিপ করা হয়েছে।");
+      currentIdx++;
+      renderCard();
+    }
+
+    function handleTurnEnd() {
+      turnsInCurrentRound++;
+      if (turnsInCurrentRound >= 2) {
+        turnsInCurrentRound = 0;
+        if (currentRound < maxRounds) {
+          currentRound++;
+          updateRoundUI();
+          showToast(`🏁 রাউন্ড ${currentRound} শুরু হচ্ছে! নিয়ম পরিবর্তন হয়েছে!`);
+          fireConfetti();
+        } else {
+          declareWinner();
+          return;
+        }
+      }
+      switchTeam();
+    }
+
+    function switchTeam() {
+      activeTeam = activeTeam === 1 ? 2 : 1;
+      document.getElementById('boxT1').classList.toggle('active-turn', activeTeam === 1);
+      document.getElementById('boxT2').classList.toggle('active-turn', activeTeam === 2);
+      
+      const tag = document.getElementById('turnTag');
+      if(activeTeam === 1) {
+        document.getElementById('boxT1').appendChild(tag);
+      } else {
+        document.getElementById('boxT2').appendChild(tag);
+      }
+    }
+
+    function declareWinner() {
+      const name1 = document.getElementById('nameT1').value;
+      const name2 = document.getElementById('nameT2').value;
+      let winnerMsg = "";
+      
+      if (scores[0] > scores[1]) {
+        winnerMsg = `🏆 খেলা শেষ! ${name1} চ্যাম্পিয়ন! (স্কোর: ${scores[0]} - ${scores[1]})`;
+      } else if (scores[1] > scores[0]) {
+        winnerMsg = `🏆 খেলা শেষ! ${name2} চ্যাম্পিয়ন! (স্কোর: ${scores[1]} - ${scores[0]})`;
+      } else {
+        winnerMsg = `🤝 হাড্ডাহাড্ডি লড়াইয়ে ম্যাচ টাই হয়েছে! (${scores[0]} - ${scores[1]})`;
+      }
+      
+      alert(winnerMsg);
+      fireConfetti();
+      document.getElementById('gameScreen').style.display = 'none';
+      document.getElementById('setupScreen').style.display = 'flex';
+    }
+
+    function manualScore(team, val) {
+      scores[team - 1] = Math.max(0, scores[team - 1] + val);
+      document.getElementById(`scoreT${team}`).textContent = scores[team - 1];
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerHTML = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    function fireConfetti() {
+      const container = document.getElementById('confetti');
+      for (let i = 0; i < 50; i++) {
+        const div = document.createElement('div');
+        div.style.cssText = `
+          position: absolute;
+          left: ${Math.random() * 100}%;
+          top: -10px;
+          width: ${8 + Math.random() * 8}px;
+          height: ${8 + Math.random() * 8}px;
+          background: ${['#fbbf24','#10b981','#3b82f6','#8b5cf6','#ef4444'][Math.floor(Math.random()*5)]};
+          border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+          animation: fall ${1 + Math.random() * 2}s linear forwards;
+        `;
+        container.appendChild(div);
+        setTimeout(() => div.remove(), 3000);
+      }
+    }
   </script>
 </body>
 </html>
+HTMLEOF
