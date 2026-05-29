@@ -411,12 +411,10 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       <p>শব্দ জটলার আলটিমেট পার্টি গেম</p>
     </div>
 
-    <!-- SETUP SCREEN -->
     <div class="setup-screen" id="setupScreen">
       <div class="setup-title">⚙️ গেম সেটিংস ও প্লেয়ার রেজিস্ট্রেশন</div>
 
       <div class="team-setup-container">
-        <!-- TEAM 1 -->
         <div class="team-setup-box">
           <h4>🔴 টিম ১ প্লেয়ারส์</h4>
           <div class="player-input-row">
@@ -426,7 +424,6 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
           <div class="player-list-tags" id="pTagsT1"></div>
         </div>
 
-        <!-- TEAM 2 -->
         <div class="team-setup-box">
           <h4>🔵 টিম ২ প্লেয়ারส์</h4>
           <div class="player-input-row">
@@ -440,15 +437,12 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       <button class="btn btn-submit" onclick="startGameEngine()">🚀 গেম শুরু করো</button>
     </div>
 
-    <!-- GAME PLAY SCREEN -->
     <div class="game-screen" id="gameScreen">
-      <!-- ROUND COUNTER -->
       <div class="round-container">
         <div class="round-status" id="roundStatus">রাউন্ড ১ / ৩</div>
         <div class="round-instruction" id="roundRule">লোড হচ্ছে...</div>
       </div>
 
-      <!-- SCOREBOARD -->
       <div class="scoreboard">
         <div class="team-box active-turn" id="boxT1">
           <div class="turn-tag" id="turnTag">চলতি টার্ন</div>
@@ -461,43 +455,36 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
         </div>
       </div>
 
-      <!-- ROLE PANEL -->
       <div class="role-selectors-grid">
         <div class="role-box">
           <label id="giverLabel">🗣️ ক্লু দেবে (Giver):</label>
-          <select id="activeGiverDropdown">
-            <!-- Dynamic -->
-          </select>
+          <select id="activeGiverDropdown" disabled>
+            </select>
         </div>
       </div>
 
-      <!-- DUAL WORD CARD DISPLAY -->
       <div class="card-box">
         <div class="card-header">
           <span id="cardId">#001</span>
           <span class="card-cat" id="cardCat">ক্যাটাগরি</span>
         </div>
         
-        <!-- Word A Block -->
         <div class="word-block a-style" id="blockA">
           <div class="word-label a-color">🟢 WORD A (সহজ - ১ পয়েন্ট)</div>
           <div class="word-text" id="wordADisplay">লোড হচ্ছে...</div>
         </div>
 
-        <!-- Word B Block -->
         <div class="word-block b-style" id="blockB">
           <div class="word-label b-color">🔥 WORD B (কঠিন বোনাস - ২ পয়েন্ট)</div>
           <div class="word-text" id="wordBDisplay">লোড হচ্ছে...</div>
         </div>
       </div>
 
-      <!-- TIMER SECTION -->
       <div class="timer-section">
         <div class="timer-text" id="timerClock">30</div>
         <div class="timer-track"><div class="timer-bar" id="timerBar"></div></div>
       </div>
 
-      <!-- GAME ACTION CONTROLS -->
       <div class="grid-controls">
         <button class="btn btn-start" id="btnStart" onclick="startTurn()">⏳ টার্ন শুরু করো</button>
         <button class="btn btn-a" id="btnScoreA" onclick="scoreWordA()">✅ Word A (+১)</button>
@@ -505,7 +492,6 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
         <button class="btn btn-skip" id="btnSkip" onclick="skipOrNextCard()">Next Card ⏭️</button>
       </div>
 
-      <!-- LEADERBOARD DYNAMICS -->
       <div class="leaderboard-box">
         <div class="leaderboard-title">🏆 প্লেয়ার লিডারবোর্ড (পয়েন্ট ভিত্তিক)</div>
         <table class="rank-table">
@@ -517,19 +503,17 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
             </tr>
           </thead>
           <tbody id="leaderboardBody">
-            <!-- Table content populated dynamically -->
-          </tbody>
+            </tbody>
         </table>
       </div>
     </div>
   </div>
 
   <script>
-    // 120 Dynamic Custom Cards = 240 Words total (120 Easy, 120 Hard)
     const DATA = [
       { id: 1, cat: "খাবার-দাবার", a: "ফুচকা", b: "টক জল" },
       { id: 2, cat: "রাস্তাঘাট", a: "রিকশা মামা", b: "জ্যাম" },
-      { id: 3, cat: "বাঙালিয়ানা", a: "লুঙ্গি", b: "শাহরুখ খান" },
+      { id: 3, cat: "বাঙালিয়ানা", a: "লুঙ্গি", b: "পহেলা বৈশাখ" },
       { id: 4, cat: "চলচ্চিত্র", a: "শোলে", b: "গব্বর সিং" },
       { id: 5, cat: "খাবার-দাবার", a: "কাচ্চি বিরিয়ানি", b: "বোরহানি" },
       { id: 6, cat: "উত্সব", a: "নাগরদোলা", b: "বৈশাখী মেলা" },
@@ -542,7 +526,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       { id: 13, cat: "পপ কালচার", a: "মিস্টার বিন", b: "টেডি ভাল্লুক" },
       { id: 14, cat: "উত্সব", a: "গায়ে হলুদ", b: "ডালা কুলা" },
       { id: 15, cat: "চলচ্চিত্র", a: "অমিতাভ বচ্চন", b: "কুলি" },
-      { id: 16, cat: "খাবার-দাবার", a: "চা", b: "টাংড়ি বিস্কুট" },
+      { id: 16, cat: "খাবার-দাবার", a: "চা", b: "টাংড়ি বিस्कুট" },
       { id: 17, cat: "দেশী লাইফ", a: "মশারী", b: "কয়েল ও অ্যারোসল" },
       { id: 18, cat: "খেলাধুলা", a: "ক্রিকেট", b: "ডাবল সেঞ্চুরি" },
       { id: 19, cat: "খেলাধুলা", a: "ফুটবল", b: "অফসাইড ট্র্যাপ" },
@@ -570,7 +554,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       { id: 41, cat: "বাঙালিয়ানা", a: "শাড়ি", b: "কুঁচি দেওয়া" },
       { id: 42, cat: "দেশী লাইফ", a: "নানী বাড়ি", b: "আমের আচার" },
       { id: 43, cat: "ডিজিটাল লাইফ", a: "স্মার্টফোন", b: "স্ক্রিনটাইম" },
-      { id: 44, cat: "রাস্তাঘাট", a: " যাত্রা", b: "হেল্পার" },
+      { id: 44, cat: "রাস্তাঘাট", a: "বাস যাত্রা", b: "হেল্পার" },
       { id: 45, cat: "খাবার-দাবার", a: "সিঙাড়া", b: "কলিজার পুর" },
       { id: 46, cat: "প্রকৃতি", a: "শীতকাল", b: "খেজুরের রস" },
       { id: 47, cat: "পপ কালচার", a: "ব্যাটম্যান", b: "গোথাম সিটি" },
@@ -579,13 +563,13 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       { id: 50, cat: "খাবার-দাবার", a: "পিঠা", b: "ভাপা ও চিতই" },
       { id: 51, cat: "বাঙালিয়ানা", a: "আলপনা", b: "মেঝের নকশা" },
       { id: 52, cat: "শিক্ষা জীবন", a: "লাইব্রেরী", b: "পিনপতন নীরবতা" },
-      { id: 53, cat: "দেশী লাইফ", a: "শপিং মল", b: "এসকেলেটর" },
+      { id: 53, cat: "দেশী লাইফ", a: "শッピング মল", b: "এসকেলেটর" },
       { id: 54, cat: "পপ কালচার", a: "বার্বি", b: "গোলাপি দুনিয়া" },
-      { id: 55, cat: "রাস্তাঘাট", a: "ফ্লাই오ভার", b: "ইউটার্ন" },
+      { id: 55, cat: "রাস্তাঘাট", a: "ফ্লাইওভার", b: "ইউটার্ন" },
       { id: 56, cat: "খাবার-দাবার", a: "হালিম", b: "খাসির পায়া" },
       { id: 57, cat: "খেলাধুলা", a: "ক্যারম", b: "স্ট্রাইকার ও পাউডার" },
-      { id: 58, cat: "দেশী লাইফ", a: "টং দোকান", b: "বেনসন সিগারেট" },
-      { id: 59, cat: "ডিজিটাল লাইফ", a: "সেলফি", b: "ফিল্টার ইফেক্ট" },
+      { id: 58, cat: "দেশী লাইফ", a: "টং দোকান", b: "রং চা" },
+      { id: 59, cat: "ডিজিটাল লাইফ", a: "セルフィ", b: "ফিল্টার ইফেক্ট" },
       { id: 60, cat: "প্রকৃতি", a: "চাঁদনী রাত", b: "জোছনা" },
       { id: 61, cat: "খাবার-দাবার", a: "সমুচা", b: "পেঁয়াজু" },
       { id: 62, cat: "দেশী লাইফ", a: "ঈদের চাঁদ", b: "আতশবাজি" },
@@ -595,7 +579,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       { id: 66, cat: "খেলাধুলা", a: "হৈ-চৈ", b: "কানামাছি" },
       { id: 67, cat: "বাঙালিয়ানা", a: "ঢোল", b: "একতারা" },
       { id: 68, cat: "খাবার-দাবার", a: "খিচুড়ি", b: "গরুর মাংস" },
-      { id: 69, cat: "দেশী লাইফ", a: "পার্লার", b: "ভ্রু প্লাক" },
+      { id: 69, cat: "দেশী লাইফ", a: "পার্লার", b: "মেকআপ কিট" },
       { id: 70, cat: "ডিজিটাল লাইফ", a: "পাসওয়ার্ড", b: "টু ফ্যাক্টর" },
       { id: 71, cat: "পপ কালচার", a: "টার্মিনেটর", b: "আই উইল বি ব্যাক" },
       { id: 72, cat: "রাস্তাঘাট", a: "জেব্রা ক্রসিং", b: "ট্রাফিক লাইট" },
@@ -607,7 +591,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       { id: 78, cat: "খাবার-দাবার", a: "মোরগ পোলাও", b: "আলু বোখারা" },
       { id: 79, cat: "বাঙালিয়ানা", a: "মাটির ব্যাংক", b: "কয়েন জমানো" },
       { id: 80, cat: "পপ কালচার", a: "জ্যাকি চ্যান", b: "কুংফু স্টান্ট" },
-      { id: 81, cat: "দেশী লাইফ", a: "সেলুন", b: "হেয়ার ড্রায়ার" },
+      { id: 81, cat: "দেশী লাইফ", a: "セルন", b: "হেয়ার ড্রায়ার" },
       { id: 82, cat: "ডিজিটাল লাইফ", a: "ল্যাপটপ", b: "মাউস প্যাড" },
       { id: 83, cat: "খাবার-দাবার", a: "বোরহানি", b: "পুদিনা পাতা" },
       { id: 84, cat: "রাস্তাঘাট", a: "সিএনজি অটো", b: "মিটার রিডিং" },
@@ -621,7 +605,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       { id: 92, cat: "খাবার-দাবার", a: "মিষ্টি দই", b: "মাটির ভাঁড়" },
       { id: 93, cat: "দেশী লাইফ", a: "চাকরি মেলা", b: "সিভি ড্রপ" },
       { id: 94, cat: "ডিজিটাল লাইফ", a: "ইন্টারনেট", b: "ওয়াইফাই রাউটার" },
-      { id: 95, cat: "রাস্তাঘাট", a: "টোল充 প্লাজা", b: "হাইওয়ে" },
+      { id: 95, cat: "রাস্তাঘাট", a: "টোল প্লাজা", b: "হাইওয়ে" },
       { id: 96, cat: "শিক্ষা জীবন", a: "প্রেজেন্টেশন", b: "ফরমাল ড্রেস" },
       { id: 97, cat: "খেলাধুলা", a: "চোর-পুলিশ", b: "কাগজের চিরকুট" },
       { id: 98, cat: "খাবার-দাবার", a: "ডাব", b: "কচি শাঁস" },
@@ -650,9 +634,9 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
     ];
 
     const RULES = {
-      1: "💬 <b>রাউন্ড ১: মুক্ত ক্লু (Free Words)</b><br>• মুখে কথা, অভিনয় বা অঙ্গভঙ্গি দিয়ে বোঝাতে পারবেন।<br>• কার্ডের মূল শব্দ বা অংশ সরাসরি উচ্চারণ করা যাবে না!",
-      2: "☝️ <b>রাউন্ড ২: এক শব্দের ক্লু (One Word Only)</b><br>• পুরো ৩০ সেকেন্ডে মুখে <b>মাত্র ১টি শব্দ</b> বলতে পারবেন। সাথে যত খুশি সাউন্ড এফেক্ট ও অ্যাক্টিং করা যাবে।",
-      3: "🤫 <b>রাউন্ড ৩: বোবা অভিনয় (Dumb Charades)</b><br>• সম্পূর্ণ সাইলেন্ট থেকে শুধু বডি ল্যাঙ্গুয়েজ ও এক্সপ্রেশন ব্যবহার করবেন। মুখে সাউন্ড করা যাবে না!"
+      1: "💬 <b>রাউন্ড ১: মুক্ত ক্লু (Free Words)</b><br>• মুখে কথা, অভিনয় বা অঙ্গভঙ্গি দিয়ে বোঝাতে পারবেন।<br>• কার্ডের মূল শব্দ সরাসরি উচ্চারণ করা যাবে না!",
+      2: "☝️ <b>রাউন্ড ২: এক শব্দের ক্লু (One Word Only)</b><br>• পুরো ৩০ সেকেন্ডে মুখে <b>মাত্র ১টি শব্দ</b> বলতে পারবেন। সাথে ভরপুর অ্যাক্টিং ও সাউন্ড এফেক্ট চলবে।",
+      3: "🤫 <b>রাউন্ড ৩: বোবা অভিনয় (Dumb Charades)</b><br>• সম্পূর্ণ সাইলেন্ট থেকে শুধু বডি ল্যাঙ্গুয়েজ ও এক্সপ্রেশন ব্যবহার করবেন। মুখে কোনো শব্দ করা যাবে না!"
     };
 
     let teamPlayers = { 1: {}, 2: {} };
@@ -665,10 +649,10 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
     let currentRound = 1;
     const maxRounds = 3; 
     let isPlaying = false;
-    let turnsInCurrentRound = 0;
 
-    // CARD PROGRESSIVE LOGIC
-    let isWordAGuessed = false; 
+    // MASTER ROTATION QUEUE (Holds the exact order of players for a round loop)
+    let masterTurnQueue = [];
+    let currentQueueIndex = 0;
 
     function addPlayerToTeam(teamNum) {
       const input = document.getElementById(`pInputT${teamNum}`);
@@ -697,17 +681,42 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       });
     }
 
-    function populateRoleDropdowns() {
-      const giverDropdown = document.getElementById('activeGiverDropdown');
-      document.getElementById('giverLabel').textContent = `🗣️ টিম ${activeTeam} থেকে কে ক্লু দেবে?`;
+    // Generates a structured loop where players alternate between Team 1 and Team 2 fairly
+    function generateMasterRotationQueue() {
+      masterTurnQueue = [];
+      const t1Players = Object.keys(teamPlayers[1]);
+      const t2Players = Object.keys(teamPlayers[2]);
+      const maxLen = Math.max(t1Players.length, t2Players.length);
+
+      for (let i = 0; i < maxLen; i++) {
+        if (t1Players[i]) masterTurnQueue.push({ team: 1, name: t1Players[i] });
+        if (t2Players[i]) masterTurnQueue.push({ team: 2, name: t2Players[i] });
+      }
+      currentQueueIndex = 0;
+    }
+
+    function syncCurrentPlayerTurn() {
+      if (masterTurnQueue.length === 0) return;
+
+      const activeTurnUser = masterTurnQueue[currentQueueIndex];
+      activeTeam = activeTurnUser.team;
+
+      // Update UI active layouts
+      document.getElementById('boxT1').classList.toggle('active-turn', activeTeam === 1);
+      document.getElementById('boxT2').classList.toggle('active-turn', activeTeam === 2);
       
-      giverDropdown.innerHTML = '<option value="">-- ক্লু-গিভার বাছুন --</option>';
-      Object.keys(teamPlayers[activeTeam]).forEach(name => {
-        const opt = document.createElement('option');
-        opt.value = name;
-        opt.textContent = name;
-        giverDropdown.appendChild(opt);
-      });
+      const tag = document.getElementById('turnTag');
+      document.getElementById(`boxT${activeTeam}`).appendChild(tag);
+
+      document.getElementById('giverLabel').textContent = `🗣️ টিম ${activeTeam} থেকে এখন ক্লু দেবেন:`;
+      
+      const dropdown = document.getElementById('activeGiverDropdown');
+      dropdown.innerHTML = '';
+      const opt = document.createElement('option');
+      opt.value = activeTurnUser.name;
+      opt.textContent = `${activeTurnUser.name} (টিম ${activeTeam})`;
+      dropdown.appendChild(opt);
+      dropdown.value = activeTurnUser.name;
     }
 
     function renderLeaderboard() {
@@ -751,15 +760,14 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       deck = shuffle([...DATA]);
       currentIdx = 0;
       scores = [0, 0];
-      activeTeam = 1;
       currentRound = 1;
-      turnsInCurrentRound = 0;
 
       document.getElementById('scoreT1').textContent = "0";
       document.getElementById('scoreT2').textContent = "0";
       
+      generateMasterRotationQueue();
       resetCardState();
-      populateRoleDropdowns();
+      syncCurrentPlayerTurn();
       renderLeaderboard();
       updateRoundUI();
       renderCard();
@@ -772,6 +780,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       document.getElementById('roundRule').innerHTML = RULES[currentRound];
     }
 
+    let isWordAGuessed = false;
     function resetCardState() {
       isWordAGuessed = false;
       document.getElementById('blockA').classList.remove('disabled-block');
@@ -794,18 +803,10 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
     }
 
     function startTurn() {
-      const giver = document.getElementById('activeGiverDropdown').value;
-      
-      if(!giver) {
-        alert("⚠️ টার্ন শুরু করার আগে ড্রপডাউন থেকে 'ক্লু-গিভার'-এর নাম সিলেক্ট করুন!");
-        return;
-      }
-
       if(isPlaying) return;
       isPlaying = true;
       secondsLeft = 30;
       document.getElementById('btnStart').disabled = true;
-      document.getElementById('activeGiverDropdown').disabled = true;
       document.getElementById('btnStart').textContent = "💥 টার্ন চলছে...";
       
       if(!isWordAGuessed) {
@@ -825,7 +826,6 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
           clearInterval(timer);
           isPlaying = false;
           document.getElementById('btnStart').disabled = false;
-          document.getElementById('activeGiverDropdown').disabled = false;
           document.getElementById('btnStart').textContent = "⏳ টার্ন শুরু করো";
           showToast("⏰ সময় শেষ!");
           handleTurnEnd();
@@ -843,7 +843,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       
       document.getElementById(`score` + (activeTeam === 1 ? 'T1' : 'T2')).textContent = scores[activeTeam - 1];
       renderLeaderboard();
-      showToast("🟢 Word A সঠিক! +১ পয়েন্ট। এবার হার্ড ট্রাই করুন অথবা স্কিপ করে নেক্সট কার্ডে যান!");
+      showToast("🟢 Word A সঠিক! +১ পয়েন্ট।");
 
       isWordAGuessed = true;
       document.getElementById('blockA').classList.add('disabled-block');
@@ -863,7 +863,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       
       document.getElementById(`score` + (activeTeam === 1 ? 'T1' : 'T2')).textContent = scores[activeTeam - 1];
       renderLeaderboard();
-      showToast("🔥 জ্যাকপট! Word B বোনাস সফলভাবে মেলাতে পারায় আরও +২ পয়েন্ট যোগ হয়েছে!");
+      showToast("🔥 জ্যাকপট! Word B সফল! +২ পয়েন্ট।");
 
       currentIdx++;
       resetCardState();
@@ -872,7 +872,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
 
     function skipOrNextCard() {
       if(isWordAGuessed) {
-        showToast("⏭️ Word B স্কিপ করা হয়েছে। পরবর্তী কার্ডে যাওয়া হচ্ছে...");
+        showToast("⏭️ Word B স্কিপ করা হয়েছে। পরবর্তী কার্ড...");
       } else {
         showToast("⏭️ কার্ড পাস করা হয়েছে!");
       }
@@ -882,38 +882,32 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
     }
 
     function handleTurnEnd() {
-      turnsInCurrentRound++;
       resetCardState(); 
       renderCard();
       
-      if(turnsInCurrentRound >= 2) {
-        turnsInCurrentRound = 0;
+      // Move to the next player in the rotation queue
+      currentQueueIndex++;
+
+      // Check if ALL players in the queue have completed their turns for this round
+      if(currentQueueIndex >= masterTurnQueue.length) {
         if(currentRound < maxRounds) {
-          alert(`🏁 রাউন্ড ${currentRound} শেষ!\n\nস্কোরবোর্ড:\n🔴 টিম ১: ${scores[0]} | 🔵 টিম ২: ${scores[1]}\n\nপরবর্তী রাউন্ড শুরু করতে OK চাপুন।`);
+          alert(`🏁 রাউন্ড ${currentRound} শেষ হলো! দুই দলের সব প্লেয়ারের ক্লু দেওয়া সম্পন্ন হয়েছে।\n\nবর্তমান স্কোরবোর্ড:\n🔴 টিম ১: ${scores[0]} | 🔵 টিম ২: ${scores[1]}\n\nপরবর্তী রাউন্ড শুরু করতে OK চাপুন।`);
           currentRound++;
+          currentQueueIndex = 0; // Reset queue iteration index for the next round loop
           updateRoundUI();
         } else {
           declareWinner();
           return;
         }
       }
-      switchTeam();
-    }
-
-    function switchTeam() {
-      activeTeam = activeTeam === 1 ? 2 : 1;
-      document.getElementById('boxT1').classList.toggle('active-turn', activeTeam === 1);
-      document.getElementById('boxT2').classList.toggle('active-turn', activeTeam === 2);
       
-      const tag = document.getElementById('turnTag');
-      document.getElementById(`boxT${activeTeam}`).appendChild(tag);
-      
-      populateRoleDropdowns();
+      // Sync UI to display the next player up
+      syncCurrentPlayerTurn();
     }
 
     function declareWinner() {
-      let resultMsg = scores[0] > scores[1] ? "🏆 টিম ১ মেগা চ্যাম্পিয়ন! 🎉" : (scores[1] > scores[0] ? "🏆 টিম ২ মেগা চ্যাম্পিয়ন! 🎉" : "🤝 ম্যাচটি ড্র হয়েছে!");
-      alert(`📊 ৩ রাউন্ডের গ্র্যান্ড ফিনালে শেষ!\n\nসর্বশেষ স্কোরকার্ড:\n🔴 টিম ১: ${scores[0]} পয়েন্ট\n🔵 টিম ২: ${scores[1]} পয়েন্ট\n\n${resultMsg}`);
+      let resultMsg = scores[0] > scores[1] ? "🏆 টিম ১ মেগা চ্যাম্পিয়ন! 🎉" : (scores[1] > scores[0] ? "🏆 টিম ২ মেগা চ্যাম্পিয়ন! 🎉" : "🤝 ম্যাচটি গ্র্যান্ড ড্র হয়েছে!");
+      alert(`📊 খেলা শেষ (মোট ৩ রাউন্ড)!\n\nসর্বশেষ স্কোরকার্ড:\n🔴 টিম ১: ${scores[0]} পয়েন্ট\n🔵 টিম ২: ${scores[1]} পয়েন্ট\n\n${resultMsg}`);
       
       document.getElementById('gameScreen').style.display = 'none';
       document.getElementById('setupScreen').style.display = 'flex';
