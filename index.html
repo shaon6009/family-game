@@ -330,9 +330,10 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
   <div class="wrap">
     <div class="header">
       <h1>🌶️ প্যাঁচফোড়ন</h1>
-      
+      <p>শব্দ জটলার আলটিমেট পার্টি গেম</p>
     </div>
 
+    <!-- SETUP SCREEN -->
     <div class="setup-screen" id="setupScreen">
       <div class="setup-title">⚙️ গেম সেটিংস সেট করুন</div>
       
@@ -356,7 +357,9 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       <button class="btn btn-submit" onclick="startGameEngine()">🚀 গেম শুরু করো</button>
     </div>
 
+    <!-- GAME PLAY SCREEN -->
     <div class="game-screen" id="gameScreen">
+      <!-- ROUND SYSTEM -->
       <div class="round-container">
         <div class="round-status" id="roundStatus">রাউন্ড ১ / ৩</div>
         <div class="round-instruction" id="roundRule">
@@ -364,6 +367,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
         </div>
       </div>
 
+      <!-- SCOREBOARD -->
       <div class="scoreboard">
         <div class="team-box active-turn" id="boxT1">
           <div class="turn-tag" id="turnTag">চলতি টার্ন</div>
@@ -384,6 +388,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
         </div>
       </div>
 
+      <!-- CARD -->
       <div class="card-box">
         <div class="card-header">
           <span id="cardId">#001</span>
@@ -400,11 +405,13 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
         </div>
       </div>
 
+      <!-- TIMER -->
       <div class="timer-section">
         <div class="timer-text" id="timerClock">45</div>
         <div class="timer-track"><div class="timer-bar" id="timerBar"></div></div>
       </div>
 
+      <!-- CORE CONTROLS -->
       <div class="grid-controls">
         <button class="btn btn-start" id="btnStart" onclick="startTurn()">⏳ টার্ন শুরু করো</button>
         <button class="btn btn-a" onclick="scorePoint(1)">✅ Word A মিলেছে (+1)</button>
@@ -426,7 +433,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       { id: 5, a: "কাচ্চি বিরিয়ানি (Kacchi)", b: "বোরহানি (Borhani)" },
       { id: 6, a: "বৈশাখী মেলা (Boishakhi Mela)", b: "নাগরদোলা (Ferris Wheel)" },
       { id: 7, a: "টাইটানিক (Titanic)", b: "জ্যাক আর روز (Jack & Rose)" },
-      { id: 8, a: "ث্রি ইডিয়টস (3 Idiots)", b: "অল ইজ ওয়েল (All Is Well)" },
+      { id: 8, a: "থ্রি ইডিয়টস (3 Idiots)", b: "অল ইজ ওয়েল (All Is Well)" },
       { id: 9, a: "লোডশেডিং (Loadshedding)", b: "হাতপাখা (Hand Fan)" },
       { id: 10, a: "হ্যারি পটার (Harry Potter)", b: "জাদুর কাঠি (Magic Wand)" },
       { id: 11, a: "ঈদের সেলামি (Eeder Selami)", b: "নতুন জামা (New Clothes)" },
@@ -436,8 +443,8 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       { id: 15, a: "অমিতাভ বচ্চন (Amitabh)", b: "কুলি (Coolie)" },
       { id: 16, a: "ডন (Don)", b: "১১ মুল্লুকের পুলিশ" },
       { id: 17, a: "সিনেমা হল (Cinema Hall)", b: "সিটি মারা (Whistling)" },
-      { id: 18, a: "স্পাইডারম্যান (Spiderman)", b: "مাকড়সার জাল (Cobweb)" },
-      { id: 19, a: "ভুতুড়ে গল্প (Ghost Story)", b: "মেছো ভূত" },
+      { id: 18, a: "স্পাইডারম্যান (Spiderman)", b: "মাকড়সার জাল (Cobweb)" },
+      { id: 19, a: "ভুতুড়ে গল্প (Ghost Story)", b: "মেছো ভূত" },
       { id: 20, a: "শীতের সকাল (Winter)", b: "ভাপা পিঠা (Bhapa Pitha)" },
       { id: 21, a: "দিলওয়ালে দুলহানিয়া (DDLJ)", b: "চলন্ত ট্রেন (Train Scene)" },
       { id: 22, a: "बाजीगर (Baazigar)", b: "হার কর জিতনে ওয়ালা" },
@@ -460,7 +467,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       { id: 39, a: "সলমন খান (Salman)", b: "বডি বিল্ডার (Shirtless)" },
       { id: 40, a: "চাটগাঁইয়া বেল্ট", b: "মেজবান (Mezban)" },
       { id: 41, a: "প্যারা (Para/Stress)", b: "চিল (Chill)" },
-      { id: 42, a: "ভাব নেওয়া (Showing Off)", b: "মোтивнойেশন (Motivation)" },
+      { id: 42, a: "ভাব নেওয়া (Showing Off)", b: "মোটিভেশন (Motivation)" },
       { id: 43, a: "মামা (Mama/Friend)", b: "ব্রো (Bro)" },
       { id: 44, a: "আবাল (Abal)", b: "আঁতেল (Intellectual)" },
       { id: 45, a: "পাম দেওয়া (Flattery)", b: "তিল মারা (Buttering Up)" },
@@ -494,7 +501,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       { id: 73, a: "গরম জল (Hot Water)", b: "ফ্লাস্ক (Flask)" },
       { id: 74, a: "আয়না (Mirror)", b: "চুল আঁচড়ানো (Combing)" },
       { id: 75, a: "ফ্রিজ (Refrigerator)", b: "বাসি তরকারি (Leftovers)" },
-      { id: 76, a: "스크린 타임 (Screen Time)", b: "চার্জার (Charger)" },
+      { id: 76, a: "স্ক্রিন টাইম (Screen Time)", b: "চার্জার (Charger)" },
       { id: 77, a: "পাপোশ (Doormat)", b: "কাদা (Mud)" },
       { id: 78, a: "সুঁই সুতা (Needle/Thread)", b: "বোতাম (Button)" },
       { id: 79, a: "মানিব্যাগ (Wallet)", b: "ফতুর (Broke)" },
