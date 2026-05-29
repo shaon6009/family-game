@@ -48,7 +48,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
     .wrap {
       position: relative;
       z-index: 1;
-      max-width: 520px;
+      max-width: 540px;
       margin: 0 auto;
       padding: 1.25rem 1rem 3rem;
       display: flex;
@@ -102,8 +102,84 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       outline: none;
     }
 
-    .form-group input:focus {
-      border-color: var(--purple);
+    .radio-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 5px;
+    }
+    
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: var(--text-soft);
+    }
+
+    .team-setup-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    
+    .team-setup-box {
+      background: rgba(0,0,0,0.2);
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .team-setup-box h4 {
+      font-size: 0.9rem;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .player-input-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .player-input-row input {
+      padding: 6px;
+      font-size: 0.85rem;
+      flex: 1;
+    }
+
+    .player-input-row button {
+      padding: 0 10px;
+      background: var(--purple);
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .player-list-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      max-height: 80px;
+      overflow-y: auto;
+    }
+
+    .player-tag {
+      background: var(--surface2);
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .player-tag span {
+      color: var(--red);
+      cursor: pointer;
+      font-weight: bold;
     }
 
     /* GAME PLAY SCREEN */
@@ -113,7 +189,6 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       gap: 1.25rem;
     }
 
-    /* ROUND TRACKER */
     .round-container {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -136,9 +211,10 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       padding: 8px;
       border-radius: 8px;
       border-left: 3px solid var(--purple);
+      text-align: left;
+      line-height: 1.4;
     }
 
-    /* SCOREBOARD */
     .scoreboard {
       display: flex;
       gap: 12px;
@@ -152,13 +228,11 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       padding: 12px;
       text-align: center;
       position: relative;
-      transition: all 0.3s;
     }
 
     .team-box.active-turn {
       border-color: var(--gold);
       background: var(--gold-dim);
-      transform: scale(1.02);
     }
 
     .turn-tag {
@@ -172,50 +246,59 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       font-weight: 700;
       padding: 2px 8px;
       border-radius: 999px;
-      white-space: nowrap;
     }
 
     .team-name {
-      background: transparent;
-      border: none;
-      border-bottom: 1px dashed rgba(255,255,255,0.2);
       color: var(--text-soft);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .team-score { font-size: 2.2rem; font-weight: 700; margin: 2px 0; }
+
+    /* DUAL DROP-DOWN ROLE PANEL */
+    .role-selectors-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .role-box {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .role-box label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-soft);
+    }
+
+    .role-box select {
+      background: var(--surface);
+      color: white;
+      border: 1px solid var(--border);
+      padding: 6px 8px;
+      border-radius: 8px;
       font-family: inherit;
       font-size: 0.9rem;
-      font-weight: 700;
-      text-align: center;
-      width: 80%;
       outline: none;
     }
-
-    .team-score { font-size: 2.2rem; font-weight: 700; margin: 4px 0; }
-
-    .score-adjusters {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .adj-btn {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      border: none;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-    .adj-plus { background: var(--green); color: white; }
-    .adj-minus { background: var(--red); color: white; }
 
     /* CARD STAGE */
     .card-box {
       background: white;
       color: #111827;
       border-radius: 24px;
-      padding: 2rem 1.5rem;
+      padding: 1.8rem 1.5rem;
       position: relative;
       box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+      text-align: center;
     }
 
     .card-header {
@@ -224,7 +307,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       font-size: 0.75rem;
       color: #6b7280;
       font-weight: 600;
-      margin-bottom: 1rem;
+      margin-bottom: 12px;
     }
 
     .card-cat {
@@ -234,23 +317,19 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       border-radius: 999px;
     }
 
-    .word-block {
-      text-align: center;
-      padding: 12px;
-      border-radius: 14px;
-      transition: background 0.2s;
+    .word-display {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #111827;
+      margin: 15px 0;
     }
-
-    .label-a { font-size: 0.7rem; font-weight: 700; color: var(--green); letter-spacing: 1px; }
-    .label-b { font-size: 0.7rem; font-weight: 700; color: var(--purple); letter-spacing: 1px; }
-
-    .val-a { font-size: 1.6rem; font-weight: 700; color: #111827; }
-    .val-b { font-size: 1.3rem; font-weight: 600; color: #374151; }
-
-    .divider {
-      border: none;
-      border-top: 2px dashed #e5e7eb;
-      margin: 14px 0;
+    
+    .mode-badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--purple);
     }
 
     /* TIMER */
@@ -260,7 +339,7 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       align-items: center;
       gap: 6px;
     }
-    .timer-text { font-size: 2.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .timer-text { font-size: 2.5rem; font-weight: 700; }
     .timer-track { width: 100%; height: 6px; background: var(--surface); border-radius: 999px; overflow: hidden; }
     .timer-bar { width: 100%; height: 100%; background: var(--green); transition: width 1s linear; }
 
@@ -279,79 +358,100 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       font-weight: 700;
       cursor: pointer;
       font-family: inherit;
-      transition: all 0.1s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
     }
-    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
     .btn-a { background: var(--green); color: white; }
-    .btn-b { background: var(--purple); color: white; }
-    .btn-skip { background: var(--surface2); color: var(--text-soft); }
     .btn-foul { background: rgba(239, 68, 68, 0.2); color: var(--red); border: 1px solid rgba(239,68,68,0.4); }
     .btn-start { background: var(--blue); color: white; grid-column: span 2; font-size: 1rem; }
-    .btn-submit { background: var(--purple); color: white; font-size: 1rem; font-weight: 700; margin-top: 10px;}
+    .btn-skip { background: var(--surface2); color: var(--text-soft); grid-column: span 2; }
+    .btn-submit { background: var(--purple); color: white; font-size: 1rem; font-weight: 700; }
 
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: #1e293b;
-      color: white;
-      padding: 8px 20px;
-      border-radius: 999px;
-      font-size: 0.85rem;
+    /* LEADERBOARD TABLE */
+    .leaderboard-box {
+      background: var(--surface);
       border: 1px solid var(--border);
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 999;
+      border-radius: 16px;
+      padding: 15px;
+    }
+    .leaderboard-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--gold);
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 4px;
+    }
+    .rank-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .rank-table th, .rank-table td {
+      padding: 8px 10px;
+      text-align: left;
+      font-size: 0.8rem;
+    }
+    .rank-table th { color: var(--text-muted); font-weight: 600; }
+    .rank-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+    
+    .toast {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
+      background: #1e293b; color: white; padding: 8px 20px; border-radius: 999px;
+      font-size: 0.85rem; border: 1px solid var(--border); transition: transform 0.3s; z-index: 999;
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
-    
-    .confetti {
-      position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: hidden;
-    }
-    @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
-
-    .stats-bar {
-      text-align: center;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
   </style>
 </head>
 <body>
 
-  <div class="confetti" id="confetti"></div>
   <div class="toast" id="toast"></div>
 
   <div class="wrap">
     <div class="header">
       <h1>🌶️ প্যাঁচফোড়ন</h1>
-      <p>শব্দ জটলার আলটিমেট পার্টি গেম</p>
+      <p></p>
     </div>
 
     <!-- SETUP SCREEN -->
     <div class="setup-screen" id="setupScreen">
-      <div class="setup-title">⚙️ গেম সেটিংস সেট করুন</div>
+      <div class="setup-title">⚙️ গেম সেটিংস ও প্লেয়ার রেজিস্ট্রেশন</div>
       
       <div class="form-group">
-        <label>🔄 মোট রাউন্ড সংখ্যা:</label>
-        <select id="setupRounds">
-          <option value="1">১ রাউন্ড </option>
-          <option value="3" selected>৩ রাউন্ড </option>
-          <option value="5">৫ রাউন্ড </option>
-          <option value="7">৭ রাউন্ড </option>
-          <option value="9">৯  রাউন্ড</option>
-          <option value="11">১১ রাউন্ড </option>
-        </select>
+        <label>🎯 গেম মোড সিলেক্ট করুন:</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="gameMode" value="A" checked> WORD A (সহজ শব্দ)
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="gameMode" value="B"> WORD B (কঠিন শব্দ)
+          </label>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>⏱️ প্রতি টার্নের সময় (সেকেন্ড):</label>
-        <input type="number" id="setupTime" value="45" min="10" max="180">
+      <div class="team-setup-container">
+        <!-- TEAM 1 -->
+        <div class="team-setup-box">
+          <h4>🔴 টিম ১ প্লেয়ার্স</h4>
+          <div class="player-input-row">
+            <input type="text" id="pInputT1" placeholder="নাম...">
+            <button onclick="addPlayerToTeam(1)">+</button>
+          </div>
+          <div class="player-list-tags" id="pTagsT1"></div>
+        </div>
+
+        <!-- TEAM 2 -->
+        <div class="team-setup-box">
+          <h4>🔵 টিম ২ প্লেয়ার্স</h4>
+          <div class="player-input-row">
+            <input type="text" id="pInputT2" placeholder="নাম...">
+            <button onclick="addPlayerToTeam(2)">+</button>
+          </div>
+          <div class="player-list-tags" id="pTagsT2"></div>
+        </div>
       </div>
 
       <button class="btn btn-submit" onclick="startGameEngine()">🚀 গেম শুরু করো</button>
@@ -359,233 +459,222 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
 
     <!-- GAME PLAY SCREEN -->
     <div class="game-screen" id="gameScreen">
-      <!-- ROUND SYSTEM -->
+      <!-- ROUND COUNTER -->
       <div class="round-container">
         <div class="round-status" id="roundStatus">রাউন্ড ১ / ৩</div>
-        <div class="round-instruction" id="roundRule">
-          🗣️ <b>মুক্ত ক্লু:</b> মুখে কথা, অ্যাক্টিং সব চলবে। কিন্তু মূল শব্দ বা তার অংশ মুখে বলা নিষিদ্ধ!
-        </div>
+        <div class="round-instruction" id="roundRule">লোড হচ্ছে...</div>
       </div>
 
       <!-- SCOREBOARD -->
       <div class="scoreboard">
         <div class="team-box active-turn" id="boxT1">
           <div class="turn-tag" id="turnTag">চলতি টার্ন</div>
-          <input type="text" class="team-name" id="nameT1" value="টিম আম">
+          <div class="team-name">🔴 টিম ১</div>
           <div class="team-score" id="scoreT1">0</div>
-          <div class="score-adjusters">
-            <button class="adj-btn adj-plus" onclick="manualScore(1,1)">+</button>
-            <button class="adj-btn adj-minus" onclick="manualScore(1,-1)">-</button>
-          </div>
         </div>
         <div class="team-box" id="boxT2">
-          <input type="text" class="team-name" id="nameT2" value="টিম জাম">
+          <div class="team-name">🔵 টিম ২</div>
           <div class="team-score" id="scoreT2">0</div>
-          <div class="score-adjusters">
-            <button class="adj-btn adj-plus" onclick="manualScore(2,1)">+</button>
-            <button class="adj-btn adj-minus" onclick="manualScore(2,-1)">-</button>
-          </div>
         </div>
       </div>
 
-      <!-- CARD -->
+      <!-- ROLE PANELS -->
+      <div class="role-selectors-grid">
+        <div class="role-box">
+          <label id="giverLabel">🗣️ ক্লু দেবে (Giver):</label>
+          <select id="activeGiverDropdown" onchange="updateGuesserOptions()">
+            <!-- Dynamic -->
+          </select>
+        </div>
+        <div class="role-box">
+          <label>🧠 অনুমান করবে (Guesser):</label>
+          <select id="activeGuesserDropdown">
+            <!-- Dynamic -->
+          </select>
+        </div>
+      </div>
+
+      <!-- CARD DISPLAY -->
       <div class="card-box">
         <div class="card-header">
           <span id="cardId">#001</span>
           <span class="card-cat" id="cardCat">ক্যাটাগরি</span>
         </div>
-        <div class="word-block" id="blockA">
-          <div class="label-a">WORD A (নরমাল পয়েন্ট)</div>
-          <div class="val-a" id="wordA">লোড হচ্ছে...</div>
-        </div>
-        <hr class="divider">
-        <div class="word-block" id="blockB">
-          <div class="label-b">WORD B (বোনাস চ্যালেঞ্জ)</div>
-          <div class="val-b" id="wordB">লোড হচ্ছে...</div>
-        </div>
+        <div class="mode-badge" id="currentModeLabel">WORD A</div>
+        <div class="word-display" id="mainWordDisplay">লোড হচ্ছে...</div>
       </div>
 
-      <!-- TIMER -->
+      <!-- TIMER SECTION -->
       <div class="timer-section">
-        <div class="timer-text" id="timerClock">45</div>
+        <div class="timer-text" id="timerClock">30</div>
         <div class="timer-track"><div class="timer-bar" id="timerBar"></div></div>
       </div>
 
-      <!-- CORE CONTROLS -->
+      <!-- GAME ACTION CONTROLS -->
       <div class="grid-controls">
         <button class="btn btn-start" id="btnStart" onclick="startTurn()">⏳ টার্ন শুরু করো</button>
-        <button class="btn btn-a" onclick="scorePoint(1)">✅ Word A মিলেছে (+1)</button>
-        <button class="btn btn-b" onclick="scorePoint(2)">🔥 Word B বোনাস (+2)</button>
-        <button class="btn btn-skip" onclick="skipCard()">⏭️ স্কিপ / পাস</button>
-        <button class="btn btn-foul" onclick="foulPenalty()">🚨 বিপক্ষ দল: ফাউল! (-1)</button>
+        <button class="btn btn-a" onclick="scorePoint(true)">✅ Right (সঠীক শব্দ)</button>
+        <button class="btn btn-foul" onclick="scorePoint(false)">🚨 ফাউল / নিয়ম ভঙ্গ (-১)</button>
+        <button class="btn btn-skip" onclick="skipCard()">Next Card ⏭️ (পাস)</button>
       </div>
 
-      <div class="stats-bar" id="statsBar">কার্ড বাকি: ১২০/১২০</div>
+      <!-- LEADERBOARD DYNAMICS -->
+      <div class="leaderboard-box">
+        <div class="leaderboard-title">🏆 প্লেয়ার লিডারবোর্ড (Leaderboard)</div>
+        <table class="rank-table">
+          <thead>
+            <tr>
+              <th>টিম</th>
+              <th>প্লেয়ার</th>
+              <th>সঠিক ক্লু</th>
+              <th>সঠিক অনুমান</th>
+              <th>ফাউল/ভুল</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody">
+            <!-- Table content populated dynamically -->
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
   <script>
     const DATA = [
       { id: 1, a: "ফুচকা (Fuchka)", b: "টক জল (Tok Jol)" },
-      { id: 2, a: "রিকশা মামা (Rickshaw Mama)", b: "জ্যাম (Traffic Jam)" },
-      { id: 3, a: "লুঙ্গি (Lungi)", b: "शाहरुख खान (SRK / Lungi Dance)" },
-      { id: 4, a: "শোলে (Sholay)", b: "গব্বর সিং (Gabbar Singh)" },
-      { id: 5, a: "কাচ্চি বিরিয়ানি (Kacchi)", b: "বোরহানি (Borhani)" },
-      { id: 6, a: "বৈশাখী মেলা (Boishakhi Mela)", b: "নাগরদোলা (Ferris Wheel)" },
-      { id: 7, a: "টাইটানিক (Titanic)", b: "জ্যাক আর روز (Jack & Rose)" },
-      { id: 8, a: "থ্রি ইডিয়টস (3 Idiots)", b: "অল ইজ ওয়েল (All Is Well)" },
-      { id: 9, a: "লোডশেডিং (Loadshedding)", b: "হাতপাখা (Hand Fan)" },
-      { id: 10, a: "হ্যারি পটার (Harry Potter)", b: "জাদুর কাঠি (Magic Wand)" },
-      { id: 11, a: "ঈদের সেলামি (Eeder Selami)", b: "নতুন জামা (New Clothes)" },
-      { id: 12, a: "বৃষ্টির দিন (Rainy Day)", b: "খিচুড়ি (Khichuri)" },
-      { id: 13, a: "মিস্টার বিন (Mr. Bean)", b: "টেডি (Teddy)" },
-      { id: 14, a: "গায়ে হলুদ (Gaye Holud)", b: "ডালা (Wedding Tray)" },
-      { id: 15, a: "অমিতাভ বচ্চন (Amitabh)", b: "কুলি (Coolie)" },
-      { id: 16, a: "ডন (Don)", b: "১১ মুল্লুকের পুলিশ" },
-      { id: 17, a: "সিনেমা হল (Cinema Hall)", b: "সিটি মারা (Whistling)" },
-      { id: 18, a: "স্পাইডারম্যান (Spiderman)", b: "মাকড়সার জাল (Cobweb)" },
-      { id: 19, a: "ভুতুড়ে গল্প (Ghost Story)", b: "মেছো ভূত" },
-      { id: 20, a: "শীতের সকাল (Winter)", b: "ভাপা পিঠা (Bhapa Pitha)" },
-      { id: 21, a: "দিলওয়ালে দুলহানিয়া (DDLJ)", b: "চলন্ত ট্রেন (Train Scene)" },
-      { id: 22, a: "बाजीगर (Baazigar)", b: "হার কর জিতনে ওয়ালা" },
-      { id: 23, a: "কুছ কুছ হোতা হ্যায়", b: "ফ্রেন্ডশিপ ব্যান্ড" },
-      { id: 24, a: "জেমস বন্ড (James Bond)", b: "০০৭ (007)" },
-      { id: 25, a: "মাটির ব্যাংক (Clay Bank)", b: "খুচরা পয়সা (Coins)" },
-      { id: 26, a: "অ্যাভেঞ্জার্স (Avengers)", b: "থানোসের তুড়ি (Thanos Snap)" },
-      { id: 27, a: "দেবদাস (Devdas)", b: "পারো (Paro)" },
-      { id: 28, a: "বাহুবলী (Baahubali)", b: "কাটাপ্পা (Katappa)" },
-      { id: 29, a: "ক্রিশ (Krrish)", b: "সুপারহিরো মাস্ক" },
-      { id: 30, a: "টার্মিনেটর (Terminator)", b: "আই উইল বি ব্যাক" },
-      { id: 31, a: "জোকার (Joker)", b: "ক্রাইম প্রিন্স (Gotham)" },
-      { id: 32, a: "চশমা (Glasses)", b: "হৃতিক রোশন (Koi Mil Gaya)" },
-      { id: 33, a: "পাইরেটস অফ ক্যারিবিয়ান", b: "জ্যাক স্প্যারো" },
-      { id: 34, a: "হোম অ্যালোন (Home Alone)", b: "চোর তাড়ানো (Traps)" },
-      { id: 35, a: "টারজান (Tarzan)", b: "জঙ্গলের রাজা (Jungle King)" },
-      { id: 36, a: "জুরাসিক পার্ক (Jurassic)", b: "ডাইনোসর (Dinosaur)" },
-      { id: 37, a: "কাল হো না হো (KHNH)", b: "লাল ডায়রি (Red Diary)" },
-      { id: 38, a: "গজনি (Ghajini)", b: "শর্ট-টার্ম মেমোরি লস" },
-      { id: 39, a: "সলমন খান (Salman)", b: "বডি বিল্ডার (Shirtless)" },
-      { id: 40, a: "চাটগাঁইয়া বেল্ট", b: "মেজবান (Mezban)" },
-      { id: 41, a: "প্যারা (Para/Stress)", b: "চিল (Chill)" },
-      { id: 42, a: "ভাব নেওয়া (Showing Off)", b: "মোটিভেশন (Motivation)" },
-      { id: 43, a: "মামা (Mama/Friend)", b: "ব্রো (Bro)" },
-      { id: 44, a: "আবাল (Abal)", b: "আঁতেল (Intellectual)" },
-      { id: 45, a: "পাম দেওয়া (Flattery)", b: "তিল মারা (Buttering Up)" },
-      { id: 46, a: "কাঠি করা (Instigating)", b: "পরনিন্দা (Gossip)" },
-      { id: 47, a: "ক্রাশ (Crush)", b: "ছ্যাঁকা (Heartbreak)" },
-      { id: 48, a: "ভাবি (Bhabhi)", b: "ঘটক (Matchmaker)" },
-      { id: 49, a: "খাওয়া দাওয়া (Feast)", b: "বিল দেওয়া (Paying Bill)" },
-      { id: 50, a: "লেট লতিফ (Late Lateef)", b: "জ্যামের অজুহাত" },
-      { id: 51, a: "পকেটমার (Pickpocket)", b: "চোর চোর (Thief Shout)" },
-      { id: 52, a: "ভুড়ি (Belly Fat)", b: "ডায়েট (Diet)" },
-      { id: 53, a: "ব্যাকবেঞ্চার (Backbencher)", b: "ফার্স্ট বয় (First Boy)" },
-      { id: 54, a: "কানপড়া (Rumors)", b: "চুগুলখোর (Snitch)" },
-      { id: 55, a: "ড্যাম কেয়ার (Damn Care)", b: "ড্যামেজ (Damage)" },
-      { id: 56, a: "চাপা মারা (Boasting)", b: "পপকর্ন (Popcorn)" },
-      { id: 57, a: "ফাঁকিবাজ (Slacker)", b: "এসাইনমেন্ট (Assignment)" },
-      { id: 58, a: "ঘ্যামা (Cool/Awesome)", b: "ফালতু (Useless)" },
-      { id: 59, a: "সেলফি (Selfie)", b: "ফিল্টার (Filter)" },
-      { id: 60, a: "পিরিত (Romance)", b: "ছদ্মবেশ (Disguise)" },
-      { id: 61, a: "মশারী (Mosquito Net)", b: "কয়েল (Coil)" },
-      { id: 62, a: "ঝাড়ু (Broom)", b: "ঘর মোছা (Mopping)" },
-      { id: 63, a: "বাজারের ব্যাগ (Bazaar Bag)", b: "দরদাম (Bargaining)" },
-      { id: 64, a: "রিমোট কন্ট্রোল (Remote)", b: "ঝগড়া (Channel Fight)" },
-      { id: 65, a: "প্রেশার কুকার", b: "সিটি দেওয়া (Whistle)" },
-      { id: 66, a: "ডাইনিং টেবিল", b: "তরকারি (Curry)" },
-      { id: 67, a: "আলমারি (Almari)", b: "চাবি হারানো (Lost Key)" },
-      { id: 68, a: "বারান্দা (Veranda)", b: "কাপড় শুকানো" },
-      { id: 69, a: "দেয়াল ঘড়ি (Wall Clock)", b: "ব্যাটারি শেষ" },
-      { id: 70, a: "বাথরুম সিঙ্গার", b: "সাবান (Soap)" },
-      { id: 71, a: "অতিথি (Guest)", b: "মিষ্টির প্যাকেট" },
-      { id: 72, a: "সকালের অ্যালার্ম", b: "স্নুজ বাটন (Snooze)" },
-      { id: 73, a: "গরম জল (Hot Water)", b: "ফ্লাস্ক (Flask)" },
-      { id: 74, a: "আয়না (Mirror)", b: "চুল আঁচড়ানো (Combing)" },
-      { id: 75, a: "ফ্রিজ (Refrigerator)", b: "বাসি তরকারি (Leftovers)" },
-      { id: 76, a: "স্ক্রিন টাইম (Screen Time)", b: "চার্জার (Charger)" },
-      { id: 77, a: "পাপোশ (Doormat)", b: "কাদা (Mud)" },
-      { id: 78, a: "সুঁই সুতা (Needle/Thread)", b: "বোতাম (Button)" },
-      { id: 79, a: "মানিব্যাগ (Wallet)", b: "ফতুর (Broke)" },
-      { id: 80, a: "ঘর সাজানো", b: "ঝুল ঝাড়া (Cobweb)" },
-      { id: 81, a: "টং দোকান (Tong)", b: "মামা এক কাপ (Cha)" },
-      { id: 82, a: "লুডু (Ludo)", b: "ছক্কা (Sixer)" },
-      { id: 83, a: "কেরাম বোর্ড (Carrom)", b: "স্ট্রাইকার (Striker)" },
-      { id: 84, a: "ফ্লাইং কিক (Flying Kick)", b: "সাউথ ইন্ডিয়ান মুভি" },
-      { id: 85, a: "কাগজের নৌকা", b: "বর্ষার জল (Rainwater)" },
-      { id: 86, a: "ঘুড়ি ওড়ানো (Kite)", b: "নাটাই (Spool)" },
-      { id: 87, a: "লাটিম (Top)", b: "সুতা (String)" },
-      { id: 88, a: "হাডুডু (Hadudu)", b: "দম আটকানো (Breath Hold)" },
-      { id: 89, a: "কানাছাফি (Blindfold)", b: "লুকোচুরি (Hide & Seek)" },
-      { id: 90, a: "ক্রিকেট ব্যাট", b: "টেপ টেনিস বল" },
-      { id: 91, a: "স্ট্যাম্প (Stumps)", b: "ইট (Brick Stumps)" },
-      { id: 92, a: "ছাদ কৃষি (Roof Garden)", b: "লেবু গাছ (Lemon Tree)" },
-      { id: 93, a: "পরীক্ষার হল", b: "দেখা দেখি (Cheating)" },
-      { id: 94, a: "পড়া মুখস্থ", b: "ঠোঁটস্থ (Rote Learning)" },
-      { id: 95, a: "টিফিন বক্স", b: "ডিম পাউরুটি (Egg Bread)" },
-      { id: 96, a: "স্কুলের ঘন্টা (School Bell)", b: "ছুটি ছুটি (Dismissal)" },
-      { id: 97, a: "প্রাইভেট টিউটর", b: "হোমওয়ার্ক (Homework)" },
-      { id: 98, a: "রিপোর্ট কার্ড", b: "বাবার সই (Father Sign)" },
-      { id: 99, a: "পেন্সিল কম্পাস", b: "জ্যামিতি বক্স (Geometry)" },
-      { id: 100, a: "রবার (Eraser)", b: "খাতা ছেঁড়া (Torn Page)" },
-      { id: 101, a: "ঝালমুড়ি (Jhalmuri)", b: "ঠোঙা (Paper Cone)" },
-      { id: 102, a: "আচারের বয়াম", b: "রোদে দেওয়া (Sun Drying)" },
-      { id: 103, a: "হকার (Hawker)", b: "পুরানো পেপার বিক্রি" },
-      { id: 104, a: "আইসক্রিম ওয়ালা", b: "ভোঁপো বাঁশি (Horn)" },
-      { id: 105, a: "কটন ক্যান্ডি", b: "হাওয়াই মিঠাই" },
-      { id: 106, a: "টক আম (Sour Mango)", b: "কাশুন্দি (Kasundi)" },
-      { id: 107, a: "ডাব বিক্রেতা (Coconut)", b: "দা (Machete)" },
-      { id: 108, a: "ইলিশ মাছ (Hilsa)", b: "সরষে বাটা (Mustard)" },
-      { id: 109, a: "শুটকি মাছ (Shutki)", b: "ঝাল চাটনি (Spicy)" },
-      { id: 110, a: "পিঠা উৎসব", b: "চিতই পিঠা (Chitoi)" },
-      { id: 111, a: "সরিষার তেল (Mustard Oil)", b: "গায়ে মাখা (Massage)" },
-      { id: 112, a: "হারিকেন (Hurricane)", b: "কেরোসিন তেল" },
-      { id: 113, a: "ক্যাসেট ফিতা (Cassette)", b: "কলম দিয়ে ঘোরানো" },
-      { id: 114, a: "ফটো অ্যালবাম", b: "রঙিন নেগেティブ (Negative)" },
-      { id: 115, a: "চিঠি (Letter)", b: "ডাকপিয়ন (Postman)" },
-      { id: 116, a: "টেলিভিশন অ্যান্টেনা", b: "ঝিরঝির করা (Static Sign)" },
-      { id: 117, a: "রেডিও (Radio)", b: "খবরের হেডলাইন" },
-      { id: 118, a: "গ্রামের বাড়ি (Village)", b: "দাদা-দাদী (Grandparents)" },
-      { id: 119, a: "পুকুর ঘাট (Pond)", b: "ঝাঁপ দেওয়া (Diving)" },
-      { id: 120, a: "শেষ পাতা (Last Page)", b: "সমাপ্ত (The End)" }
+      { id: 2, a: "রিকশা মামা", b: "জ্যাম (Traffic Jam)" },
+      { id: 3, a: "লুঙ্গি (Lungi)", b: "शाहरुख खान (SRK)" },
+      { id: 4, a: "শোলে (Sholay)", b: "গব্বর সিং" },
+      { id: 5, a: "কাচ্চি বিরিয়ানি", b: "বোরহানি (Borhani)" },
+      { id: 6, a: "বৈশাখী মেলা", b: "নাগরদোলা" },
+      { id: 7, a: "টাইটানিক (Titanic)", b: "জ্যাক আর রোজ" },
+      { id: 8, a: "থ্রি ইডিয়টস", b: "অল ইজ ওয়ের" },
+      { id: 9, a: "লোডশেডিং", b: "হাতপাখা (Hand Fan)" },
+      { id: 10, a: "হ্যারি পটার", b: "জাদুর কাঠি" },
+      { id: 11, a: "ঈদের সেলামি", b: "নতুন জামা" },
+      { id: 12, a: "খিচুড়ি (Khichuri)", b: "বৃষ্টির দিন" },
+      { id: 13, a: "মিস্টার বিন", b: "টেডি (Teddy)" },
+      { id: 14, a: "গায়ে হলুদ", b: "ডালা (Tray)" },
+      { id: 15, a: "অমিতাভ বচ্চন", b: "কুলি (Coolie)" }
     ];
 
+    // UPDATED TO 3 ROUNDS SYSTEM
     const RULES = {
-      1: "🗣️ <b>মুক্ত ক্লু:</b> মুখে কথা, অ্যাক্টিং সব চলবে। কিন্তু মূল শব্দ বা তার অংশ মুখে বলা নিষিদ্ধ!",
-      2: "☝️ <b>এক শব্দের ক্লু:</b> পুরো টার্নে মুখে মাত্র ১টি শব্দ বলতে পারবেন। বাকি সব ইশারা ও সাউন্ড ইফেক্ট!",
-      3: "🤫 <b>বোবা অভিনয়:</b> মুখে কোনো কথা বা আওয়াজ করা সম্পূর্ণ নিষিদ্ধ। শুধু বডি ল্যাঙ্গুয়েজ!",
-      4: "🗣️ <b>মুক্ত ক্লু (বোনাস রাউন্ড):</b> দ্রুত মেলাও! ফুল স্পিড অ্যাকশন!",
-      5: "🤫 <b>বোবা অভিনয় (মেগা ফাইনাল):</b> চ্যাম্পিয়নশিপ নির্ধারণী শেষ রাউন্ড!",
-      6: "☝️ <b>এক শব্দের ক্লু (ট্যাকটিক্যাল):</b> মাথা খাটান, মাত্র ১টি শব্দে পুরো টিমকে জেতান!",
-      7: "🗣️ <b>মুক্ত ক্লু (টাইব্রেকার মোড):</b> উত্তেজনা তুঙ্গে, যেকোনো ইশারায় বা কথায় ক্লু দিন!",
-      8: "🤫 <b>বোবা অভিনয় (সুপার চ্যালেঞ্জ):</b> মুখে কোনো রা কাড়া যাবে না!",
-      9: "☝️ <b>এক শব্দের ক্লু (এলিট রাউন্ড):</b> শুধুই একটি পারফেক্ট শব্দ!",
-      10: "🗣️ <b>মুক্ত ক্লু (সেমি ফাইনাল):</b> যেকোনো উপায়ে টিমকে পয়েন্ট এনে দিন!",
-      11: "🤫 <b>বোবা অভিনয় (আলটিমেট গ্ল্যাডিয়েটর):</b> ইতিহাসের দীর্ঘতম ম্যাচের শেষ ও চূড়ান্ত বোবা লড়াই!"
+      1: "💬 <b>রাউন্ড ১: মুক্ত ক্লু (Free Words)</b><br>• <b>কী করবেন:</b> মুখে কথা, অভিনয় বা অঙ্গভঙ্গি দিয়ে বোঝাতে পারবেন।<br>• <b>নিষেধ:</b> কার্ডের মূল শব্দ বা অংশ সরাসরি উচ্চারণ করা যাবে না!",
+      2: "☝️ <b>রাউন্ড ২: এক শব্দের ক্লু (One Word Only)</b><br>• <b>কী করবেন:</b> পুরো ৩০ সেকেন্ডে মুখে <b>মাত্র ১টি শব্দ</b> বলতে পারবেন। সাথে যত খুশি সাউন্ড এফেক্ট ও অ্যাক্টিং করা যাবে।",
+      3: "🤫 <b>রাউন্ড ৩: বোবা অভিনয় (Dumb Charades)</b><br>• <b>কী করবেন:</b> সম্পূর্ণ সাইলেন্ট থেকে শুধু বডি ল্যাঙ্গুয়েজ ও এক্সপ্রেশন ব্যবহার করবেন।<br>• <b>নিষেধ:</b> মুখে কোনো প্রকার ফিসফিসানি বা সাউন্ড করা যাবে না!"
     };
 
+    let teamPlayers = { 1: {}, 2: {} };
     let deck = [];
     let currentIdx = 0;
     let scores = [0, 0];
-    let activeTeam = 1;
+    let activeTeam = 1; 
     let timer = null;
-    let secondsLeft = 45;
-    let maxSeconds = 45;
+    let secondsLeft = 30;
     let currentRound = 1;
-    let maxRounds = 3;
+    const maxRounds = 3; // FIXED TO 3
     let isPlaying = false;
+    let selectedMode = "A";
     let turnsInCurrentRound = 0;
 
-    function getCategory(id) {
-      if (id <= 40) return "পপ কালচার ও মুভি";
-      if (id <= 80) return "দেশী লাইফ ও ক্যাওস";
-      return "নস্টালজিয়া ও স্মৃতি";
+    function addPlayerToTeam(teamNum) {
+      const input = document.getElementById(`pInputT${teamNum}`);
+      const name = input.value.trim();
+      if(!name) return;
+      if(teamPlayers[1][name] || teamPlayers[2][name]) { alert("এই নামের খেলোয়াড় অলরেডি আছেন!"); return; }
+      
+      teamPlayers[teamNum][name] = { rightClue: 0, rightGuess: 0, wrong: 0 };
+      input.value = "";
+      renderSetupTags(teamNum);
+    }
+
+    function removePlayerFromTeam(teamNum, name) {
+      delete teamPlayers[teamNum][name];
+      renderSetupTags(teamNum);
+    }
+
+    function renderSetupTags(teamNum) {
+      const container = document.getElementById(`pTagsT${teamNum}`);
+      container.innerHTML = "";
+      Object.keys(teamPlayers[teamNum]).forEach(name => {
+        const tag = document.createElement('div');
+        tag.className = 'player-tag';
+        tag.innerHTML = `${name} <span onclick="removePlayerFromTeam(${teamNum}, '${name}')">&times;</span>`;
+        container.appendChild(tag);
+      });
+    }
+
+    function populateRoleDropdowns() {
+      const giverDropdown = document.getElementById('activeGiverDropdown');
+      document.getElementById('giverLabel').textContent = `🗣️ টিম ${activeTeam} ক্লু দেবে:`;
+      
+      giverDropdown.innerHTML = '<option value="">-- কে ক্লু দেবে? --</option>';
+      Object.keys(teamPlayers[activeTeam]).forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        giverDropdown.appendChild(opt);
+      });
+
+      document.getElementById('activeGuesserDropdown').innerHTML = '<option value="">-- প্রথমে ক্লু-গিভার বাছুন --</option>';
+    }
+
+    function updateGuesserOptions() {
+      const giverName = document.getElementById('activeGiverDropdown').value;
+      const guesserDropdown = document.getElementById('activeGuesserDropdown');
+      
+      guesserDropdown.innerHTML = '<option value="">-- কে অনুমান করবে? --</option>';
+      if(!giverName) return;
+
+      Object.keys(teamPlayers[activeTeam]).forEach(name => {
+        if(name !== giverName) {
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.textContent = name;
+          guesserDropdown.appendChild(opt);
+        }
+      });
+    }
+
+    function renderLeaderboard() {
+      const tbody = document.getElementById('leaderboardBody');
+      tbody.innerHTML = "";
+      
+      let allPlayers = [];
+      [1, 2].forEach(tNum => {
+        Object.keys(teamPlayers[tNum]).forEach(name => {
+          allPlayers.push({ team: tNum, name: name, ...teamPlayers[tNum][name] });
+        });
+      });
+
+      allPlayers.sort((a, b) => (b.rightGuess + b.rightClue) - (a.rightGuess + a.rightClue) || a.wrong - b.wrong);
+
+      if(allPlayers.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">কোনো খেলোয়াড় নেই</td></tr>`;
+        return;
+      }
+
+      allPlayers.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="color:${p.team === 1 ? '#ef4444':'#3b82f6'}">টিম ${p.team}</td>
+          <td><b>${p.name}</b></td>
+          <td style="color:var(--green); font-weight:500;">${p.rightClue}</td>
+          <td style="color:var(--blue); font-weight:500;">${p.rightGuess}</td>
+          <td style="color:var(--red);">${p.wrong}</td>
+        `;
+        tbody.appendChild(tr);
+      });
     }
 
     function startGameEngine() {
-      maxRounds = parseInt(document.getElementById('setupRounds').value);
-      maxSeconds = parseInt(document.getElementById('setupTime').value);
-      
-      if(isNaN(maxSeconds) || maxSeconds < 10) maxSeconds = 45;
+      if(Object.keys(teamPlayers[1]).length < 2 || Object.keys(teamPlayers[2]).length < 2) {
+        alert("⚠️ অনুমানের প্লেয়ার ট্র্যাক করার জন্য দুই টিমে কমপক্ষে ২ জন করে প্লেয়ার থাকতে হবে!");
+        return;
+      }
 
+      selectedMode = document.querySelector('input[name="gameMode"]:checked').value;
       document.getElementById('setupScreen').style.display = 'none';
       document.getElementById('gameScreen').style.display = 'flex';
 
@@ -596,18 +685,21 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       currentRound = 1;
       turnsInCurrentRound = 0;
 
+      document.getElementById('currentModeLabel').textContent = `MODE: WORD ${selectedMode}`;
+      document.getElementById('scoreT1').textContent = "0";
+      document.getElementById('scoreT2').textContent = "0";
+      
+      populateRoleDropdowns();
+      renderLeaderboard();
       updateRoundUI();
       renderCard();
-      showToast("🎮 ১২০টি কাস্টম কার্ড সফলভাবে লোড হয়েছে!");
     }
 
-    function shuffle(array) {
-      return array.sort(() => Math.random() - 0.5);
-    }
+    function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
 
     function updateRoundUI() {
       document.getElementById('roundStatus').textContent = `রাউন্ড ${currentRound} / ${maxRounds}`;
-      document.getElementById('roundRule').innerHTML = RULES[currentRound] || RULES[1];
+      document.getElementById('roundRule').innerHTML = RULES[currentRound];
     }
 
     function renderCard() {
@@ -617,97 +709,84 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       }
       const card = deck[currentIdx];
       document.getElementById('cardId').textContent = '#' + String(card.id).padStart(3, '0');
-      document.getElementById('cardCat').textContent = getCategory(card.id);
-      document.getElementById('wordA').textContent = card.a;
-      document.getElementById('wordB').textContent = card.b;
-      
-      document.getElementById('statsBar').textContent = `কার্ড বাকি: ${deck.length - currentIdx}/${deck.length}`;
+      document.getElementById('cardCat').textContent = card.id <= 6 ? "পপ কালচার ও মুভি" : "দেশী লাইফ ও ক্যাওস";
+      document.getElementById('mainWordDisplay').textContent = selectedMode === "A" ? card.a : card.b;
     }
 
     function startTurn() {
+      const giver = document.getElementById('activeGiverDropdown').value;
+      const guesser = document.getElementById('activeGuesserDropdown').value;
+      
+      if(!giver || !guesser) {
+        alert("⚠️ টার্ন শুরু করার আগে ড্রপডাউন থেকে 'ক্লু-গিভার' এবং 'অনুমানকারী' দুজনের নামই সিলেক্ট করুন!");
+        return;
+      }
+
       if(isPlaying) return;
       isPlaying = true;
-      secondsLeft = maxSeconds;
+      secondsLeft = 30;
       document.getElementById('btnStart').disabled = true;
-      document.getElementById('btnStart').textContent = "💥 খেলা চলছে...";
-      
-      updateTimerUI();
+      document.getElementById('activeGiverDropdown').disabled = true;
+      document.getElementById('activeGuesserDropdown').disabled = true;
+      document.getElementById('btnStart').textContent = "💥 টার্ন চলছে...";
       
       timer = setInterval(() => {
         secondsLeft--;
-        updateTimerUI();
+        document.getElementById('timerClock').textContent = secondsLeft;
+        document.getElementById('timerBar').style.width = (secondsLeft / 30) * 100 + '%';
         
         if(secondsLeft <= 0) {
           clearInterval(timer);
           isPlaying = false;
           document.getElementById('btnStart').disabled = false;
+          document.getElementById('activeGiverDropdown').disabled = false;
+          document.getElementById('activeGuesserDropdown').disabled = false;
           document.getElementById('btnStart').textContent = "⏳ টার্ন শুরু করো";
           showToast("⏰ সময় শেষ!");
-          
           handleTurnEnd();
         }
       }, 1000);
     }
 
-    function updateTimerUI() {
-      const clock = document.getElementById('timerClock');
-      const bar = document.getElementById('timerBar');
-      clock.textContent = secondsLeft;
-      bar.style.width = (secondsLeft / maxSeconds) * 100 + '%';
+    function scorePoint(isRight) {
+      if(!isPlaying) { showToast("⚠️ আগে 'টার্ন শুরু করো' বাটন চেপে টাইমার চালু করুন!"); return; }
       
-      if(secondsLeft <= 5) {
-        clock.style.color = '#ef4444';
-        bar.style.background = '#ef4444';
+      const giver = document.getElementById('activeGiverDropdown').value;
+      const guesser = document.getElementById('activeGuesserDropdown').value;
+      
+      if(isRight) {
+        scores[activeTeam - 1] += 1;
+        if(giver) teamPlayers[activeTeam][giver].rightClue += 1;
+        if(guesser) teamPlayers[activeTeam][guesser].rightGuess += 1;
+        showToast(`✅ সঠিক! টিম ও প্লেয়ারদের ব্যক্তিগত স্কোর আপডেট হয়েছে।`);
       } else {
-        clock.style.color = '#f8fafc';
-        bar.style.background = '#10b981';
-      }
-    }
-
-    function scorePoint(pts) {
-      if(!isPlaying) {
-        showToast("⚠️ আগে 'টার্ন শুরু করো' বাটন চেপে টাইমার চালু করুন!");
-        return;
+        // Foul rule enforced by watchdogs
+        scores[activeTeam - 1] = Math.max(0, scores[activeTeam - 1] - 1);
+        if(giver) teamPlayers[activeTeam][giver].wrong += 1;
+        if(guesser) teamPlayers[activeTeam][guesser].wrong += 1;
+        showToast("🚨 বিপক্ষ দল ফাউল ধরেছে! -১ পয়েন্ট।");
       }
       
-      scores[activeTeam - 1] += pts;
       document.getElementById(`scoreT${activeTeam}`).textContent = scores[activeTeam - 1];
-      
-      if(pts === 2) {
-        showToast("🔥 ডাবল ধামাকা! বোনাস +2 পয়েন্ট!");
-        fireConfetti();
-      } else {
-        showToast("👍 দারুণ! +1 পয়েন্ট।");
-      }
-      
-      currentIdx++;
-      renderCard();
-    }
-
-    function foulPenalty() {
-      const currentTeam = activeTeam;
-      scores[currentTeam - 1] = Math.max(0, scores[currentTeam - 1] - 1);
-      document.getElementById(`scoreT${currentTeam}`).textContent = scores[currentTeam - 1];
-      showToast("🚨 নিয়ম ভাঙার অপরাধে -1 পয়েন্ট পেনাল্টি!");
+      renderLeaderboard();
       currentIdx++;
       renderCard();
     }
 
     function skipCard() {
-      showToast("⏭️ কার্ড স্কিপ করা হয়েছে।");
+      showToast("⏭️ পাস করা হয়েছে (কোনো পয়েন্ট কাটা যায়নি)");
       currentIdx++;
       renderCard();
     }
 
     function handleTurnEnd() {
       turnsInCurrentRound++;
-      if (turnsInCurrentRound >= 2) {
+      if(turnsInCurrentRound >= 2) {
         turnsInCurrentRound = 0;
-        if (currentRound < maxRounds) {
+        if(currentRound < maxRounds) {
+          alert(`🏁 রাউন্ড ${currentRound} শেষ!\n\nস্কোরবোর্ড:\n🔴 টিম ১: ${scores[0]} | 🔵 টিম ২: ${scores[1]}\n\nপরবর্তী রাউন্ড শুরু করতে OK চাপুন।`);
           currentRound++;
           updateRoundUI();
-          showToast(`🏁 রাউন্ড ${currentRound} শুরু হচ্ছে! নিয়ম পরিবর্তন হয়েছে!`);
-          fireConfetti();
         } else {
           declareWinner();
           return;
@@ -722,61 +801,24 @@ cat > /mnt/user-data/outputs/bangla_card_game.html << 'HTMLEOF'
       document.getElementById('boxT2').classList.toggle('active-turn', activeTeam === 2);
       
       const tag = document.getElementById('turnTag');
-      if(activeTeam === 1) {
-        document.getElementById('boxT1').appendChild(tag);
-      } else {
-        document.getElementById('boxT2').appendChild(tag);
-      }
+      document.getElementById(`boxT${activeTeam}`).appendChild(tag);
+      
+      populateRoleDropdowns();
     }
 
     function declareWinner() {
-      const name1 = document.getElementById('nameT1').value;
-      const name2 = document.getElementById('nameT2').value;
-      let winnerMsg = "";
+      let resultMsg = scores[0] > scores[1] ? "🏆 টিম ১ মেগা চ্যাম্পিয়ন! 🎉" : (scores[1] > scores[0] ? "🏆 টিম ২ মেগা চ্যাম্পিয়ন! 🎉" : "🤝 ম্যাচটি ড্র হয়েছে!");
+      alert(`📊 ৩ রাউন্ডের খেলা শেষ!\n\nসর্বশেষ স্কোরকার্ড:\n🔴 টিম ১: ${scores[0]} পয়েন্ট\n🔵 টিম ২: ${scores[1]} পয়েন্ট\n\n${resultMsg}`);
       
-      if (scores[0] > scores[1]) {
-        winnerMsg = `🏆 খেলা শেষ! ${name1} চ্যাম্পিয়ন! (স্কোর: ${scores[0]} - ${scores[1]})`;
-      } else if (scores[1] > scores[0]) {
-        winnerMsg = `🏆 খেলা শেষ! ${name2} চ্যাম্পিয়ন! (স্কোর: ${scores[1]} - ${scores[0]})`;
-      } else {
-        winnerMsg = `🤝 হাড্ডাহাড্ডি লড়াইয়ে ম্যাচ টাই হয়েছে! (${scores[0]} - ${scores[1]})`;
-      }
-      
-      alert(winnerMsg);
-      fireConfetti();
       document.getElementById('gameScreen').style.display = 'none';
       document.getElementById('setupScreen').style.display = 'flex';
-    }
-
-    function manualScore(team, val) {
-      scores[team - 1] = Math.max(0, scores[team - 1] + val);
-      document.getElementById(`scoreT${team}`).textContent = scores[team - 1];
     }
 
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.innerHTML = msg;
       t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2500);
-    }
-
-    function fireConfetti() {
-      const container = document.getElementById('confetti');
-      for (let i = 0; i < 50; i++) {
-        const div = document.createElement('div');
-        div.style.cssText = `
-          position: absolute;
-          left: ${Math.random() * 100}%;
-          top: -10px;
-          width: ${8 + Math.random() * 8}px;
-          height: ${8 + Math.random() * 8}px;
-          background: ${['#fbbf24','#10b981','#3b82f6','#8b5cf6','#ef4444'][Math.floor(Math.random()*5)]};
-          border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
-          animation: fall ${1 + Math.random() * 2}s linear forwards;
-        `;
-        container.appendChild(div);
-        setTimeout(() => div.remove(), 3000);
-      }
+      setTimeout(() => t.classList.remove('show'), 2000);
     }
   </script>
 </body>
